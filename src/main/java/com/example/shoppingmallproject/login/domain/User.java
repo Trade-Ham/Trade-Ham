@@ -15,10 +15,7 @@ public class User {
 
     private String email;
     private String name;
+    private String role;
 
-    public void setEmail(String email) {
-    }
-
-    public void setName(String name) {
-    }
+    private ProviderType provider;
 }

@@ -88,7 +88,7 @@ public class JwtTokenProvider {
     /**
      * JWT 토큰에서 권한 정보 추출
      */
-    private Collection<? extends GrantedAuthority> getRoles(String token) {
+    public Collection<? extends GrantedAuthority> getRoles(String token) {
         Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
         List<String> roles = claims.get("roles", List.class);
         return roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
@@ -97,7 +97,7 @@ public class JwtTokenProvider {
     /**
      * JWT 토큰에서 사용자 이름(username) 추출
      */
-    private String getUsername(String token) {
+    public String getUsername(String token) {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().getSubject();
     }
 
