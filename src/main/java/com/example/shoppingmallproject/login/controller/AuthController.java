@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.net.URI;
 import java.util.Map;
@@ -32,16 +33,18 @@ public class AuthController {
     /**
      * 카카오로부터 Authorization Code를 전달받아 JWT 토큰 생성
      */
-    @GetMapping("/callback")
-    public ResponseEntity<Map<String, String>> kakaoLoginCallback() {
+    @GetMapping("/callback/kakao")
+    public RedirectView kakaoLoginCallback() {
         log.info("카카오 로그인 Callback 요청");
-
         try {
             TokenResponseDto tokenResponse = authService.createJwtTokens();
-            return ResponseEntity.ok(Map.of("accessToken", tokenResponse.getAccessToken(), "refreshToken", tokenResponse.getRefreshToken()));
+            log.info("accessToken: {}", tokenResponse.getAccessToken());
+            log.info("refreshToken: {}", tokenResponse.getRefreshToken());
+
+            return new RedirectView("http://" + "localhost" + ":8080/?accessToken=" + tokenResponse.getAccessToken());
         } catch (Exception e) {
             log.error("카카오 로그인 처리 중 오류 발생: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", e.getMessage()));
+            return new RedirectView("http://localhost:8080/loginFailure");
         }
     }
 

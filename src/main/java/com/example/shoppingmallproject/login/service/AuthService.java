@@ -7,6 +7,7 @@ import com.example.shoppingmallproject.login.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -24,13 +25,13 @@ public class AuthService {
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
 
-    @Value("${security.oauth2.client.registration.kakao.client-id}")
+    @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
     private String kakaoClientId;
 
-    @Value("${security.oauth2.client.registration.kakao.redirect-uri}")
+    @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
     private String kakaoRedirectUri;
 
-    @Value("${security.oauth2.client.provider.kakao.authorization-uri}")
+    @Value("${spring.security.oauth2.client.provider.kakao.authorization-uri}")
     private String kakaoAuthBaseUrl;
 
     /**
@@ -45,31 +46,30 @@ public class AuthService {
      * 현재 인증된 사용자를 기준으로 JWT Access Token 및 Refresh Token 생성
      */
     public TokenResponseDto createJwtTokens() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (principal instanceof OAuth2User) {
-            OAuth2User oAuth2User = (OAuth2User) principal;
-            String email = (String) oAuth2User.getAttributes().get("email");
-
-            // 이메일을 기준으로 사용자 정보 조회
-            Optional<User> userOptional = userRepository.findByEmail(email);
-            if (userOptional.isEmpty()) {
-                throw new RuntimeException("사용자 정보를 찾을 수 없습니다.");
-            }
-
-            User user = userOptional.get();
-            log.info("사용자 정보: {} - JWT 생성 시작", user.getEmail());
-
-            // JWT Access Token 및 Refresh Token 생성
-            Collection<SimpleGrantedAuthority> authorities = Collections.singleton(new SimpleGrantedAuthority(user.getRole()));
-            String accessToken = jwtTokenProvider.createAccessToken(user.getEmail(), authorities);
-            String refreshToken = jwtTokenProvider.createRefreshToken(user.getEmail());
-
-            return new TokenResponseDto(accessToken, refreshToken);
-        } else {
+        if (authentication == null || !(authentication.getPrincipal() instanceof OAuth2User)) {
             throw new RuntimeException("OAuth2 사용자 정보가 없습니다.");
         }
+
+        OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
+        String email = (String) oAuth2User.getAttributes().get("email");
+
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        if (userOptional.isEmpty()) {
+            throw new RuntimeException("사용자 정보를 찾을 수 없습니다.");
+        }
+
+        User user = userOptional.get();
+
+        // JWT Access Token 및 Refresh Token 생성
+        Collection<SimpleGrantedAuthority> authorities = Collections.singleton(new SimpleGrantedAuthority(user.getRole()));
+        String accessToken = jwtTokenProvider.createAccessToken(user.getEmail(), authorities);
+        String refreshToken = jwtTokenProvider.createRefreshToken(user.getEmail());
+
+        return new TokenResponseDto(accessToken, refreshToken, user);
     }
+
 
     /**
      * Refresh Token을 사용하여 새로운 Access Token 발급
@@ -82,7 +82,7 @@ public class AuthService {
         String email = jwtTokenProvider.getUsername(refreshToken);
         String newAccessToken = jwtTokenProvider.createAccessToken(email, jwtTokenProvider.getRoles(refreshToken));
 
-        return new TokenResponseDto(newAccessToken, refreshToken);
+        return new TokenResponseDto(newAccessToken, refreshToken, null);
     }
 
     /**
