@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>카카오 로그인</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css">
+</head>
+<body>
+<section class="hero is-fullheight is-light">
+    <div class="hero-body">
+        <div class="container has-text-centered">
+            <h1 class="title">카카오 로그인</h1>
+            <div class="box">
+                <p>카카오 로그인을 통해 서비스에 접근하세요.</p>
+                <button class="button is-warning" onclick="redirectKakaoLogin()">카카오 로그인</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script type="text/javascript">
+    function redirectKakaoLogin() {
+        window.location.href = '/oauth2/authorization/kakao';
+    }
+</script>
+</body>
+</html>

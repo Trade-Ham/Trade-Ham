@@ -2,9 +2,67 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <script>
+        // URL에서 특정 파라미터 값을 추출
+        function getParameterFromUrl(paramName) {
+            const params = new URLSearchParams(window.location.search);
+            return params.get(paramName);
+        }
+
+        // AccessToken과 userInfo가 있다면 처리
+        function saveDataAndRedirect() {
+            // URL에서 accessToken과 userInfo 추출
+            const accessToken = getParameterFromUrl('accessToken');
+            const encodedUserInfo = getParameterFromUrl('userInfo');
+
+            if (accessToken) {
+                // accessToken을 localStorage에 저장
+                localStorage.setItem('accessToken', accessToken);
+            }
+
+            if (encodedUserInfo) {
+                // userInfo를 디코딩하여 JSON 객체로 변환
+                const decodedUserInfo = decodeURIComponent(encodedUserInfo);
+                const userInfoObject = JSON.parse(decodedUserInfo);
+
+                // userInfo를 localStorage에 저장 (필요시)
+                localStorage.setItem('userInfo', decodedUserInfo);
+
+                // userInfo 내용을 <h3> 태그로 표시
+                const userInfoElement = document.createElement('h3');
+                userInfoElement.textContent = `User Info: ${JSON.stringify(userInfoObject, null, 2)}`; // JSON 형식의 내용을 텍스트로 변환하여 표시
+                document.body.appendChild(userInfoElement);
+            }
+
+            // URL에서 파라미터 제거 후 루트 경로로 리다이렉트
+            window.history.replaceState({}, document.title, "/");
+        }
+
+        // AccessToken 유무에 따라 <h2> 태그 내용 변경
+        function updateAccessTokenStatus() {
+            const accessToken = localStorage.getItem('accessToken');
+            const statusElement = document.createElement('h2');
+
+            if (accessToken) {
+                statusElement.textContent = "accessToken 있음";
+            } else {
+                statusElement.textContent = "accessToken 없음";
+            }
+
+            // <body> 태그에 생성된 <h2> 태그를 추가
+            document.body.appendChild(statusElement);
+        }
+
+        // 페이지 로드 시 실행
+        window.onload = function() {
+            saveDataAndRedirect();
+            updateAccessTokenStatus();
+        };
+    </script>
 </head>
 <body>
-dd
+<h1>Home</h1>
 </body>
 </html>

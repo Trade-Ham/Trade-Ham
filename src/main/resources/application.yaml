@@ -1,1 +1,50 @@
-spring.application.name=ShoppingMall-Project
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id: ${CLIENT_ID}
+            client-secret: ${CLIENT_SECRET} # ?? ??
+            redirect-uri: "http://localhost:8080/oauth2/authorization/callback/kakao"
+            authorization-grant-type: authorization_code
+            scope:
+              - profile_nickname
+              - account_email
+            client-name: Kakao
+            client-authentication-method: client_secret_post
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/shoppingmall
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        #        show_sql: true
+        format_sql: true
+
+
+jwt:
+  secret: ${JWT_SECRET}
+  access-token-validity: 1800000  # Access Token ?? ?? (??? ??, 30?)
+  refresh-token-validity: 604800000  # Refresh Token ?? ?? (??? ??, 7?)
+
+#logging:
+#  level:
+#    root: DEBUG
+#    org.springframework.security: DEBUG
+#    com.example.shoppingmallproject: DEBUG
