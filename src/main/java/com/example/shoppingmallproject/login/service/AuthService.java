@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
@@ -24,6 +25,7 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
+    private final RedisService redisService;
 
     @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
     private String kakaoClientId;
@@ -67,6 +69,9 @@ public class AuthService {
         String accessToken = jwtTokenProvider.createAccessToken(user.getEmail(), authorities);
         String refreshToken = jwtTokenProvider.createRefreshToken(user.getEmail());
 
+        // Redis에 Refresh Token 저장 (7일 유효)
+        redisService.saveRefreshToken(email, refreshToken, Duration.ofDays(7));
+
         return new TokenResponseDto(accessToken, refreshToken, user);
     }
 
@@ -75,11 +80,14 @@ public class AuthService {
      * Refresh Token을 사용하여 새로운 Access Token 발급
      */
     public TokenResponseDto refreshJwtTokens(String refreshToken) {
-        if (!jwtTokenProvider.validateToken(refreshToken)) {
-            throw new IllegalArgumentException("유효하지 않은 Refresh Token입니다.");
-        }
+        String email = jwtTokenProvider.getUserEmail(refreshToken);
+        // Refresh Token이 Redis에 존재하는지 확인
+        String storedRefreshToken = redisService.getRefreshToken(email);
 
-        String email = jwtTokenProvider.getUsername(refreshToken);
+        if (storedRefreshToken == null || !storedRefreshToken.equals(refreshToken)) {
+            //refresh token도 재생성
+            throw new IllegalArgumentException("Refresh Token이 유효하지 않거나 만료되었습니다.");
+        }
         String newAccessToken = jwtTokenProvider.createAccessToken(email, jwtTokenProvider.getRoles(refreshToken));
 
         return new TokenResponseDto(newAccessToken, refreshToken, null);
@@ -91,5 +99,7 @@ public class AuthService {
     public void invalidateRefreshToken(String refreshToken) {
         log.info("Refresh Token 무효화 처리: {}", refreshToken);
         // 필요 시, Refresh Token을 DB나 캐시에서 삭제하는 로직 추가
+        // access token도 같이 삭제 처리 해줘야 함
+        redisService.deleteRefreshToken(jwtTokenProvider.getUserEmail(refreshToken));
     }
 }

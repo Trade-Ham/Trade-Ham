@@ -85,7 +85,7 @@ public class JwtTokenProvider {
      * JWT 토큰에서 인증 정보 조회
      */
     public Authentication getAuthentication(String token) {
-        UserDetails userDetails = new User(getUsername(token), "", getRoles(token));
+        UserDetails userDetails = new User(getUserEmail(token), "", getRoles(token));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
@@ -99,9 +99,9 @@ public class JwtTokenProvider {
     }
 
     /**
-     * JWT 토큰에서 사용자 이름(username) 추출
+     * JWT 토큰에서 사용자 이메일 추출
      */
-    public String getUsername(String token) {
+    public String getUserEmail(String token) {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().getSubject();
     }
 
