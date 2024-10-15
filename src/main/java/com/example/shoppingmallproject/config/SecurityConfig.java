@@ -9,6 +9,7 @@ import com.example.shoppingmallproject.login.security.JwtTokenProvider;
 import com.example.shoppingmallproject.login.service.AuthService;
 import com.example.shoppingmallproject.login.service.CustomOAuth2UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,9 +21,12 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
@@ -39,6 +43,27 @@ public class SecurityConfig {
      */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
+//        http
+//                .cors(corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
+//                    @Override
+//                    public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+//
+//                        CorsConfiguration configuration = new CorsConfiguration();
+//
+//                        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
+//                        configuration.setAllowedMethods(Collections.singletonList("*"));
+//                        configuration.setAllowCredentials(true);
+//                        configuration.setAllowedHeaders(Collections.singletonList("*"));
+//                        configuration.setMaxAge(3600L);
+//
+//                        configuration.setExposedHeaders(Collections.singletonList("Set-Cookie"));
+//                        configuration.setExposedHeaders(Collections.singletonList("Authorization"));
+//
+//                        return configuration;
+//                    }
+//                }));
+
         http
                 .csrf(AbstractHttpConfigurer::disable) //csrf disable
                 .formLogin(AbstractHttpConfigurer::disable) //form 로그인 방식 disable
@@ -53,41 +78,13 @@ public class SecurityConfig {
                         )
 //                        .loginPage("/login")  // 로그인 페이지 경로 설정
 //                        .loginProcessingUrl("/oauth2/authorization/callback/kakao")
-                        .successHandler(customAuthenticationSuccessHandler())  // Custom Success Handler 추가
+                        .successHandler(customSuccessHandler)  // Custom Success Handler 추가
 //                        .failureUrl("/loginFailure")
                 )
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless로 세션 설정
-                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
-    }
-
-    // Custom AuthenticationSuccessHandler Bean 정의
-    @Bean
-    public AuthenticationSuccessHandler customAuthenticationSuccessHandler() {
-        return (request, response, authentication) -> {
-            // JWT 토큰 생성
-            TokenResponseDto tokenResponse = authService.createJwtTokens();
-
-            User user = tokenResponse.getUserInfo();
-            // User 객체를 JSON으로 직렬화
-            ObjectMapper objectMapper = new ObjectMapper();
-            String userInfoJson = objectMapper.writeValueAsString(user);
-
-            // URL에 포함할 각 값을 UTF-8로 인코딩
-            String encodedAccessToken = URLEncoder.encode(tokenResponse.getAccessToken(), StandardCharsets.UTF_8.toString());
-            String encodedUserInfo = URLEncoder.encode(userInfoJson, StandardCharsets.UTF_8.toString());
-
-            // 리다이렉트할 URL 생성
-            String redirectUrl = String.format("http://localhost:8080/?accessToken=%s&userInfo=%s", encodedAccessToken, encodedUserInfo);
-
-            // 리다이렉트 처리
-            response.sendRedirect(redirectUrl);
-        };
-    }
-
-    private JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter(jwtTokenProvider);
     }
 }
