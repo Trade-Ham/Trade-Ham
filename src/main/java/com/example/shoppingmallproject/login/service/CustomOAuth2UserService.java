@@ -1,6 +1,7 @@
 package com.example.shoppingmallproject.login.service;
 
 import com.example.shoppingmallproject.login.domain.ProviderType;
+import com.example.shoppingmallproject.login.domain.RoleType;
 import com.example.shoppingmallproject.login.domain.User;
 import com.example.shoppingmallproject.login.dto.CustomOAuth2User;
 import com.example.shoppingmallproject.login.dto.OAuth2Response;
@@ -8,17 +9,13 @@ import com.example.shoppingmallproject.login.dto.UserDTO;
 import com.example.shoppingmallproject.login.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.Map;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -43,29 +40,30 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             throw new OAuth2AuthenticationException("잘못된 registration id 입니다.");
         }
 
-//        User user = userRepository.findByEmail(email)
-//                .orElseGet(() -> createUser(finalEmail, finalName));
-//        // 새로운 Attributes 맵 생성
-//        Map<String, Object> newAttributes = Map.of(
-//                "email", email,
-//                "name", name
-//        );
+        OAuth2Response finalOAuth2Response = oAuth2Response;
+        User user = userRepository.findByEmail(oAuth2Response.getEmail())
+                .orElseGet(() -> createUser(finalOAuth2Response));
 
         UserDTO userDTO = new UserDTO();
-        userDTO.setNickname(oAuth2Response.getNickName());
-        userDTO.setEmail(oAuth2Response.getEmail());
-        userDTO.setProvider(oAuth2Response.getProvider());
-        userDTO.setRole(oAuth2Response.getRole());
+        userDTO.setNickname(user.getNickname());
+        userDTO.setEmail(user.getEmail());
+        userDTO.setProvider(user.getProvider());
+        userDTO.setRole(user.getRole().toString());
 
         return new CustomOAuth2User(userDTO);
     }
 
-    private User createUser(String email, String name) {
+    private User createUser(OAuth2Response oAuth2Response) {
         User user = new User();
-        user.setEmail(email);
-        user.setName(name);
-        user.setRole("USER");
+        user.setEmail(oAuth2Response.getEmail());
+        user.setNickname(oAuth2Response.getNickName());
+        if(Objects.equals(oAuth2Response.getRole(), "ADMIN")) {
+            user.setRole(RoleType.ADMIN);
+        } else {
+            user.setRole(RoleType.USER);
+        }
         user.setProvider(ProviderType.KAKAO);
+        user.setProfileImage(oAuth2Response.getProfileImage());
         return userRepository.save(user);
     }
 }
