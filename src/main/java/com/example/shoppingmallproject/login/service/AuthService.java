@@ -1,6 +1,7 @@
 package com.example.shoppingmallproject.login.service;
 
 import com.example.shoppingmallproject.login.domain.User;
+import com.example.shoppingmallproject.login.dto.CustomOAuth2User;
 import com.example.shoppingmallproject.login.dto.TokenResponseDto;
 import com.example.shoppingmallproject.login.repository.UserRepository;
 import com.example.shoppingmallproject.login.security.JwtTokenProvider;
@@ -8,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.Optional;
 
 @Slf4j
@@ -54,8 +57,8 @@ public class AuthService {
             throw new RuntimeException("OAuth2 사용자 정보가 없습니다.");
         }
 
-        OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
-        String email = (String) oAuth2User.getAttributes().get("email");
+        CustomOAuth2User customUserDetails = (CustomOAuth2User) authentication.getPrincipal();
+        String email = customUserDetails.getEmail();
 
         Optional<User> userOptional = userRepository.findByEmail(email);
         if (userOptional.isEmpty()) {
@@ -65,12 +68,12 @@ public class AuthService {
         User user = userOptional.get();
 
         // JWT Access Token 및 Refresh Token 생성
-        Collection<SimpleGrantedAuthority> authorities = Collections.singleton(new SimpleGrantedAuthority(user.getRole()));
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
+        GrantedAuthority auth = iterator.next();
+        String role = auth.getAuthority();
         String accessToken = jwtTokenProvider.createAccessToken(user.getEmail(), authorities);
         String refreshToken = jwtTokenProvider.createRefreshToken(user.getEmail());
-
-        // Redis에 Refresh Token 저장 (7일 유효)
-        redisService.saveRefreshToken(email, refreshToken, Duration.ofDays(7));
 
         return new TokenResponseDto(accessToken, refreshToken, user);
     }

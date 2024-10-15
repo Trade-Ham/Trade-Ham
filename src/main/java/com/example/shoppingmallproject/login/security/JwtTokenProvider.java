@@ -49,8 +49,8 @@ public class JwtTokenProvider {
     /**
      * JWT Access Token 생성
      */
-    public String createAccessToken(String userName, Collection<? extends GrantedAuthority> roles) {
-        Claims claims = Jwts.claims().setSubject(userName);
+    public String createAccessToken(String userEmail, Collection<? extends GrantedAuthority> roles) {
+        Claims claims = Jwts.claims().setSubject(userEmail);
         claims.put("roles", roles.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
 
         Date now = new Date();
@@ -69,12 +69,12 @@ public class JwtTokenProvider {
     /**
      * JWT Refresh Token 생성
      */
-    public String createRefreshToken(String userName) {
+    public String createRefreshToken(String userEmail) {
         Date now = new Date();
         Date validity = new Date(now.getTime() + refreshTokenValidity);
 
         return Jwts.builder()
-                .setSubject(userName)
+                .setSubject(userEmail)
                 .setIssuedAt(now)
                 .setExpiration(validity)
                 .signWith(key, SignatureAlgorithm.HS256)

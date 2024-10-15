@@ -13,6 +13,6 @@ public class Locker {
     @Id @GeneratedValue
     private Long lockerId;
 
-    private String lockerNumber;
+    private int lockerNumber;
     private Boolean lockerStatus;
 }
