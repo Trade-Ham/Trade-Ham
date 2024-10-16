@@ -31,24 +31,6 @@ public class AuthController {
     }
 
     /**
-     * 카카오로부터 Authorization Code를 전달받아 JWT 토큰 생성
-     */
-    @GetMapping("/callback/kakao")
-    public RedirectView kakaoLoginCallback() {
-        log.info("카카오 로그인 Callback 요청");
-        try {
-            TokenResponseDto tokenResponse = authService.createJwtTokens();
-            log.info("accessToken: {}", tokenResponse.getAccessToken());
-            log.info("refreshToken: {}", tokenResponse.getRefreshToken());
-
-            return new RedirectView("http://" + "localhost" + ":8080/?accessToken=" + tokenResponse.getAccessToken());
-        } catch (Exception e) {
-            log.error("카카오 로그인 처리 중 오류 발생: {}", e.getMessage());
-            return new RedirectView("http://localhost:8080/loginFailure");
-        }
-    }
-
-    /**
      * Refresh Token을 사용하여 JWT Access Token 갱신
      */
     @PostMapping("/refresh")

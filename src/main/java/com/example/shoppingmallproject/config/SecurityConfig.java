@@ -76,13 +76,13 @@ public class SecurityConfig {
                         .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
                                 .userService(customOAuth2UserService)
                         )
-//                        .loginPage("/login")  // 로그인 페이지 경로 설정
-//                        .loginProcessingUrl("/oauth2/authorization/callback/kakao")
+                        .loginPage("/login")  // 로그인 페이지 경로 설정
+                        .loginProcessingUrl("/oauth2/authorization/callback/kakao")
                         .successHandler(customSuccessHandler)  // Custom Success Handler 추가
-//                        .failureUrl("/loginFailure")
+                        .failureUrl("/loginFailure")
                 )
                 .sessionManagement((session) -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless로 세션 설정
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)) // Stateless로 세션 설정 (react) IF_REQUIRED (thymeleaf)
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

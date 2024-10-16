@@ -50,13 +50,12 @@ public class AuthService {
     /**
      * 현재 인증된 사용자를 기준으로 JWT Access Token 및 Refresh Token 생성
      */
-    public TokenResponseDto createJwtTokens() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    public TokenResponseDto createJwtTokens(Authentication authentication) {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication == null || !(authentication.getPrincipal() instanceof OAuth2User)) {
             throw new RuntimeException("OAuth2 사용자 정보가 없습니다.");
         }
-
         CustomOAuth2User customUserDetails = (CustomOAuth2User) authentication.getPrincipal();
         String email = customUserDetails.getEmail();
 
@@ -69,9 +68,7 @@ public class AuthService {
 
         // JWT Access Token 및 Refresh Token 생성
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
-        GrantedAuthority auth = iterator.next();
-        String role = auth.getAuthority();
+
         String accessToken = jwtTokenProvider.createAccessToken(user.getEmail(), authorities);
         String refreshToken = jwtTokenProvider.createRefreshToken(user.getEmail());
 

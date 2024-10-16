@@ -29,12 +29,12 @@ public class OAuth2Response {
 
     public String getNickName() {
         Map<String, Object> profile = (Map<String, Object>) attribute.get("profile");
-        return profile.get("name").toString();
+        return profile.get("nickname").toString();
     }
 
     public String getProfileImage() {
         Map<String, Object> profile = (Map<String, Object>) attribute.get("profile");
-        return profile.get("profile_image").toString();
+        return profile.get("profile_image_url").toString();
     }
 
 }
