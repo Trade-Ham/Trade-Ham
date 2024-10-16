@@ -14,6 +14,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.PatchMapping;
 
 import java.security.Key;
 import java.util.Base64;
@@ -64,7 +65,6 @@ public class JwtTokenProvider {
                 .compact();
         return token;
     }
-
 
     /**
      * JWT Refresh Token 생성

@@ -3,6 +3,7 @@ package com.example.shoppingmallproject.login.service;
 import com.example.shoppingmallproject.login.domain.User;
 import com.example.shoppingmallproject.login.dto.CustomOAuth2User;
 import com.example.shoppingmallproject.login.dto.TokenResponseDto;
+import com.example.shoppingmallproject.login.dto.UpdateUserInfoRequest;
 import com.example.shoppingmallproject.login.repository.UserRepository;
 import com.example.shoppingmallproject.login.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -101,5 +102,15 @@ public class AuthService {
         // 필요 시, Refresh Token을 DB나 캐시에서 삭제하는 로직 추가
         // access token도 같이 삭제 처리 해줘야 함
         redisService.deleteRefreshToken(jwtTokenProvider.getUserEmail(refreshToken));
+    }
+
+    public void updateUserInfo(String accessToken, UpdateUserInfoRequest request) {
+        String email = jwtTokenProvider.getUserEmail(accessToken);
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."));
+
+        user.setAccount(request.getAccount());
+        user.setRealname(request.getRealname());
+        userRepository.save(user);
     }
 }
