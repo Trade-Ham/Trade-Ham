@@ -89,12 +89,19 @@ public class AuthService {
         String storedRefreshToken = redisService.getRefreshToken(email);
 
         if (storedRefreshToken == null || !storedRefreshToken.equals(refreshToken)) {
-//            //refresh token도 재생성
+            //refresh token도 재생성 -> 하면 안됨 -> 탈취된 토큰을 가져왔을 때 재생성됨 -> 로그인창으로 보내서 새로 로그인하게 만들게 하면 refresh token은 알아서 생성됨
+            if (!storedRefreshToken.equals(refreshToken)) {
+                redisService.deleteRefreshToken(storedRefreshToken);
+            }
             throw new IllegalArgumentException("Refresh Token이 유효하지 않거나 만료되었습니다.");
         }
         String newAccessToken = jwtTokenProvider.createAccessToken(email, jwtTokenProvider.getRoles(refreshToken));
         String newRefreshToken = jwtTokenProvider.createRefreshToken(email);
 
+        redisService.deleteRefreshToken(storedRefreshToken);
+        redisService.saveRefreshToken(email, newRefreshToken, Duration.ofDays(7));
+
+        response.setHeader("access", newAccessToken);
         response.addCookie(createCookie("refresh", newRefreshToken, Duration.ofDays(7)));
         return new TokenResponseDto(newAccessToken, newRefreshToken, null);
     }
