@@ -8,6 +8,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -36,12 +37,16 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         redisService.saveRefreshToken(tokenResponse.getUserInfo().getEmail(), tokenResponse.getRefreshToken(), Duration.ofDays(7));
 
         // RefreshToken을 쿠키에 저장
-        response.addCookie(createCookie("Authorization", tokenResponse.getRefreshToken(), Duration.ofDays(7)));
+        response.addCookie(createCookie("refresh", tokenResponse.getRefreshToken(), Duration.ofDays(7)));
 
         // AccessToken을 JSON 형태로 클라이언트에 응답 (react)
 //        sendAccessToken(response, tokenResponse.getAccessToken());
+
+//        response.setHeader("accessToken", tokenResponse.getAccessToken());
         // AccessToken을 HTML 페이지로 전달 (thymeleaf)
+//        response.sendRedirect("/auth-success");
         response.sendRedirect("/auth-success?accessToken=" + URLEncoder.encode(tokenResponse.getAccessToken(), StandardCharsets.UTF_8));
+        response.setStatus(HttpStatus.OK.value());
     }
 
     private void sendAccessToken(HttpServletResponse response, String accessToken) throws IOException {
@@ -54,7 +59,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         Cookie cookie = new Cookie(key, value);
         cookie.setMaxAge((int) duration.getSeconds());
-        //cookie.setSecure(true);
+        //cookie.setSecure(true); https
         cookie.setPath("/");
         cookie.setHttpOnly(true);
 

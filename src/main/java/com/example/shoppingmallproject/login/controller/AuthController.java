@@ -5,6 +5,7 @@ import com.example.shoppingmallproject.login.dto.TokenResponseDto;
 import com.example.shoppingmallproject.login.dto.UpdateUserInfoRequest;
 import com.example.shoppingmallproject.login.security.JwtTokenProvider;
 import com.example.shoppingmallproject.login.service.AuthService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -56,9 +57,9 @@ public class AuthController {
      * Refresh Token을 사용하여 JWT Access Token 갱신
      */
     @PostMapping("/refresh")
-    public ResponseEntity<TokenResponseDto> refreshToken(@RequestBody TokenRefreshRequest request) {
+    public ResponseEntity<TokenResponseDto> refreshToken(HttpServletResponse response, @RequestBody TokenRefreshRequest request) {
         try {
-            TokenResponseDto tokenResponse = authService.refreshJwtTokens(request.getRefreshToken());
+            TokenResponseDto tokenResponse = authService.refreshJwtTokens(response, request.getRefreshToken());
             return ResponseEntity.ok(tokenResponse);
         } catch (Exception e) {
             log.error("토큰 갱신 실패: {}", e.getMessage());

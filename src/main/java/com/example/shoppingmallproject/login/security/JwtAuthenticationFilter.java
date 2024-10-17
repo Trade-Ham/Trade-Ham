@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Objects;
 
 @RequiredArgsConstructor
@@ -22,11 +23,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
+        String token = request.getParameter("accessToken");
         // 1. 요청 헤더에서 Authorization 헤더를 추출
-        String token = jwtTokenProvider.resolveToken(request);
-
+//        String token = jwtTokenProvider.resolveToken(request);
         // 2. 토큰이 존재하고 유효할 경우, 사용자 정보를 설정
-        if (token != null && jwtTokenProvider.validateToken(token) && !jwtTokenProvider.isTokenExpired(token)) {
+        if (token != null && jwtTokenProvider.validateToken(token)) {
+
+            if (jwtTokenProvider.isTokenExpired(token)) {
+                PrintWriter writer = response.getWriter();
+                writer.print("access token expired");
+
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
+            }
+
             // 3. 토큰에서 사용자 정보 추출
             Authentication authentication = jwtTokenProvider.getAuthentication(token);
 

@@ -6,9 +6,13 @@ import com.example.shoppingmallproject.login.dto.TokenResponseDto;
 import com.example.shoppingmallproject.login.dto.UpdateUserInfoRequest;
 import com.example.shoppingmallproject.login.repository.UserRepository;
 import com.example.shoppingmallproject.login.security.JwtTokenProvider;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -52,7 +56,6 @@ public class AuthService {
      * 현재 인증된 사용자를 기준으로 JWT Access Token 및 Refresh Token 생성
      */
     public TokenResponseDto createJwtTokens(Authentication authentication) {
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication == null || !(authentication.getPrincipal() instanceof OAuth2User)) {
             throw new RuntimeException("OAuth2 사용자 정보가 없습니다.");
@@ -80,18 +83,20 @@ public class AuthService {
     /**
      * Refresh Token을 사용하여 새로운 Access Token 발급
      */
-    public TokenResponseDto refreshJwtTokens(String refreshToken) {
+    public TokenResponseDto refreshJwtTokens(HttpServletResponse response, String refreshToken) {
         String email = jwtTokenProvider.getUserEmail(refreshToken);
         // Refresh Token이 Redis에 존재하는지 확인
         String storedRefreshToken = redisService.getRefreshToken(email);
 
         if (storedRefreshToken == null || !storedRefreshToken.equals(refreshToken)) {
-            //refresh token도 재생성
+//            //refresh token도 재생성
             throw new IllegalArgumentException("Refresh Token이 유효하지 않거나 만료되었습니다.");
         }
         String newAccessToken = jwtTokenProvider.createAccessToken(email, jwtTokenProvider.getRoles(refreshToken));
+        String newRefreshToken = jwtTokenProvider.createRefreshToken(email);
 
-        return new TokenResponseDto(newAccessToken, refreshToken, null);
+        response.addCookie(createCookie("refresh", newRefreshToken, Duration.ofDays(7)));
+        return new TokenResponseDto(newAccessToken, newRefreshToken, null);
     }
 
     /**
@@ -112,5 +117,16 @@ public class AuthService {
         user.setAccount(request.getAccount());
         user.setRealname(request.getRealname());
         userRepository.save(user);
+    }
+
+    private Cookie createCookie(String key, String value, Duration duration) {
+
+        Cookie cookie = new Cookie(key, value);
+        cookie.setMaxAge((int) duration.getSeconds());
+        //cookie.setSecure(true); https
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+
+        return cookie;
     }
 }
