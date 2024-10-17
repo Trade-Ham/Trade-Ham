@@ -66,18 +66,4 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
     }
-
-    /**
-     * 로그아웃 처리
-     */
-    @PostMapping("/logout")
-    public ResponseEntity<String> logout(@RequestBody TokenRefreshRequest request) {
-        try {
-            authService.invalidateRefreshToken(request.getRefreshToken());
-            return ResponseEntity.ok("로그아웃 성공");
-        } catch (Exception e) {
-            log.error("로그아웃 실패: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("로그아웃 실패");
-        }
-    }
 }

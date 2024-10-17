@@ -11,19 +11,13 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.Optional;
 
 @Slf4j
@@ -104,16 +98,6 @@ public class AuthService {
         response.setHeader("access", newAccessToken);
         response.addCookie(createCookie("refresh", newRefreshToken, Duration.ofDays(7)));
         return new TokenResponseDto(newAccessToken, newRefreshToken, null);
-    }
-
-    /**
-     * 사용자의 Refresh Token 무효화 (로그아웃 처리)
-     */
-    public void invalidateRefreshToken(String refreshToken) {
-        log.info("Refresh Token 무효화 처리: {}", refreshToken);
-        // 필요 시, Refresh Token을 DB나 캐시에서 삭제하는 로직 추가
-        // access token도 같이 삭제 처리 해줘야 함
-        redisService.deleteRefreshToken(jwtTokenProvider.getUserEmail(refreshToken));
     }
 
     public void updateUserInfo(String accessToken, UpdateUserInfoRequest request) {
