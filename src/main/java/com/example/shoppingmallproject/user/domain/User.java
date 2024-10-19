@@ -3,7 +3,6 @@ package com.example.shoppingmallproject.user.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -21,7 +20,7 @@ public class User {
     @Column(nullable = false, length = 50)
     private String nickname;
 
-    @Column(nullable = false, unique = true, length = 255)
+    @Column(nullable = false, unique = true)
     private String email;
 
     private String password;
@@ -40,7 +39,6 @@ public class User {
     @Column(length = 10)
     private String realname;
 
-    @Column(length = 255)
     private String profileImage;
 
     @CreationTimestamp

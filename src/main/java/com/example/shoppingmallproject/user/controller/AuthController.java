@@ -4,12 +4,8 @@ import com.example.shoppingmallproject.user.domain.User;
 import com.example.shoppingmallproject.user.dto.LoginReqDTO;
 import com.example.shoppingmallproject.user.jwt.JwtTokenProvider;
 import com.example.shoppingmallproject.user.repository.UserRepository;
-import com.example.shoppingmallproject.user.service.RefreshTokenService;
 import com.example.shoppingmallproject.user.service.UserService;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -31,7 +27,6 @@ public class AuthController {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
-    private final RefreshTokenService refreshTokenService;
     private final UserRepository userRepository;
 
 
