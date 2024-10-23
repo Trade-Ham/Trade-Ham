@@ -1,8 +1,9 @@
 package com.example.shoppingmallproject.domain.auth.service;
 
-import com.oauth2_jwt.domain.auth.dto.*;
-import com.oauth2_jwt.domain.auth.entity.UserEntity;
-import com.oauth2_jwt.domain.auth.repository.UserRepository;
+
+import com.example.shoppingmallproject.domain.auth.dto.*;
+import com.example.shoppingmallproject.domain.auth.entity.UserEntity;
+import com.example.shoppingmallproject.domain.auth.repository.UserRepository;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;

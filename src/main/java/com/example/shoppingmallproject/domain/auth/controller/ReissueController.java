@@ -1,6 +1,7 @@
 package com.example.shoppingmallproject.domain.auth.controller;
 
-import com.oauth2_jwt.domain.auth.service.ReissueService;
+
+import com.example.shoppingmallproject.domain.auth.service.ReissueService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

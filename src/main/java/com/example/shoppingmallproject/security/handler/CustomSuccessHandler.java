@@ -1,9 +1,10 @@
 package com.example.shoppingmallproject.security.handler;
 
-import com.oauth2_jwt.domain.auth.dto.CustomOAuth2User;
-import com.oauth2_jwt.domain.auth.entity.RefreshEntity;
-import com.oauth2_jwt.domain.auth.repository.RefreshRepository;
-import com.oauth2_jwt.security.jwt.JWTUtil;
+
+import com.example.shoppingmallproject.domain.auth.dto.CustomOAuth2User;
+import com.example.shoppingmallproject.domain.auth.entity.RefreshEntity;
+import com.example.shoppingmallproject.domain.auth.repository.RefreshRepository;
+import com.example.shoppingmallproject.security.jwt.JWTUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;

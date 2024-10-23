@@ -1,9 +1,8 @@
 package com.example.shoppingmallproject.security.jwt;
 
-import com.oauth2_jwt.domain.auth.dto.CustomOAuth2User;
-import com.oauth2_jwt.domain.auth.dto.UserDTO;
-import com.oauth2_jwt.domain.auth.entity.UserEntity;
-import com.oauth2_jwt.domain.auth.repository.UserRepository;
+
+import com.example.shoppingmallproject.domain.auth.dto.CustomOAuth2User;
+import com.example.shoppingmallproject.domain.auth.dto.UserDTO;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

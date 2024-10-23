@@ -1,7 +1,8 @@
 package com.example.shoppingmallproject.domain.auth.service;
 
-import com.oauth2_jwt.domain.auth.repository.RefreshRepository;
-import com.oauth2_jwt.security.jwt.JWTUtil;
+
+import com.example.shoppingmallproject.domain.auth.repository.RefreshRepository;
+import com.example.shoppingmallproject.security.jwt.JWTUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;

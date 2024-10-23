@@ -1,11 +1,12 @@
 package com.example.shoppingmallproject.security.config;
 
-import com.oauth2_jwt.domain.auth.repository.RefreshRepository;
-import com.oauth2_jwt.domain.auth.service.CustomOAuth2UserService;
-import com.oauth2_jwt.security.handler.CustomSuccessHandler;
-import com.oauth2_jwt.security.jwt.CustomLogoutFilter;
-import com.oauth2_jwt.security.jwt.JWTFilter;
-import com.oauth2_jwt.security.jwt.JWTUtil;
+
+import com.example.shoppingmallproject.domain.auth.repository.RefreshRepository;
+import com.example.shoppingmallproject.domain.auth.service.CustomOAuth2UserService;
+import com.example.shoppingmallproject.security.handler.CustomSuccessHandler;
+import com.example.shoppingmallproject.security.jwt.CustomLogoutFilter;
+import com.example.shoppingmallproject.security.jwt.JWTFilter;
+import com.example.shoppingmallproject.security.jwt.JWTUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
