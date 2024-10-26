@@ -38,5 +38,13 @@ public class SellService {
     public Long updateProduct(Long productId, ProductRequest productRequest) {
         Products product = sellRepository.findById(productId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
+
+        product.setProductName(productRequest.getProductName());
+        product.setProductDescription(productRequest.getDescription());
+        product.setPrice(productRequest.getPrice());
+
+        Products updatedProduct = sellRepository.save(product);
+
+        return updatedProduct.getId();
     }
 }
