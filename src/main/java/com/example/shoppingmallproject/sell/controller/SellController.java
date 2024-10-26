@@ -46,4 +46,10 @@ public class SellController {
         List<Products> products = sellService.getMyProducts(request);
         return ResponseEntity.ok(products);
     }
+
+    @GetMapping("/products/search")
+    public ResponseEntity<List<Products>> searchProducts(@RequestParam String keyword) {
+        List<Products> products = sellService.searchProducts(keyword);
+        return ResponseEntity.ok(products);
+    }
 }

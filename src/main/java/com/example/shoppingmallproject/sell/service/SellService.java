@@ -76,4 +76,8 @@ public class SellService {
 
         return userInfo.getProducts();
     }
+
+    public List<Products> searchProducts(String keyword) {
+        return sellRepository.searchByKeywordAndStatus(keyword, StatusType.SELL);
+    }
 }
