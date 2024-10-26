@@ -1,5 +1,7 @@
 package com.example.shoppingmallproject.sell.service;
 
+import com.example.shoppingmallproject.login.domain.User;
+import com.example.shoppingmallproject.login.repository.UserRepository;
 import com.example.shoppingmallproject.login.security.JwtTokenProvider;
 import com.example.shoppingmallproject.sell.domain.Products;
 import com.example.shoppingmallproject.sell.domain.StatusType;
@@ -18,15 +20,19 @@ import java.util.List;
 public class SellService {
 
     private final SellRepository sellRepository;
+    private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
 
     public Long createProduct(ProductRequest productRequest, HttpServletRequest request) {
 
         Long sellerId = jwtTokenProvider.checkTokenValidity(request);
 
+        User seller = userRepository.findById(sellerId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
         // 생성자로 가능하지 않나 setter 쓰는 것보다
         Products product = new Products();
-        product.setSellerId(sellerId);
+        product.setSellerId(seller);
         product.setProductName(productRequest.getProductName());
         product.setProductDescription(productRequest.getDescription());
         product.setPrice(productRequest.getPrice());
@@ -60,5 +66,14 @@ public class SellService {
 
     public List<Products> getAllProducts() {
         return sellRepository.findByStatus(StatusType.SELL);
+    }
+
+    public List<Products> getMyProducts(HttpServletRequest request) {
+
+        Long userId = jwtTokenProvider.checkTokenValidity(request);
+        User userInfo = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
+        return userInfo.getProducts();
     }
 }

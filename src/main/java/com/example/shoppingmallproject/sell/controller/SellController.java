@@ -40,4 +40,10 @@ public class SellController {
         List<Products> products = sellService.getAllProducts();
         return ResponseEntity.ok(products);
     }
+
+    @GetMapping("/products/sell")
+    public ResponseEntity<List<Products>> getMyProducts(HttpServletRequest request) {
+        List<Products> products = sellService.getMyProducts(request);
+        return ResponseEntity.ok(products);
+    }
 }

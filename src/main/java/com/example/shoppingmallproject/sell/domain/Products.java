@@ -1,5 +1,6 @@
 package com.example.shoppingmallproject.sell.domain;
 
+import com.example.shoppingmallproject.login.domain.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,8 +15,9 @@ public class Products {
     @Column(name = "product_id")
     private Long id;
 
-    @Column(nullable = false)
-    private Long sellerId;
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private User sellerId;
 
     @Column(name = "name", nullable = false)
     private String productName;
