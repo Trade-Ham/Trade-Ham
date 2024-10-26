@@ -25,4 +25,10 @@ public class SellController {
         sellService.updateProduct(product_id, productRequest);
         return ResponseEntity.ok(product_id);
     }
+
+    @DeleteMapping("/product/{product_id}")
+    public ResponseEntity<Long> deleteProduct(@PathVariable Long product_id) {
+        sellService.deleteProduct(product_id);
+        return ResponseEntity.ok(product_id);
+    }
 }

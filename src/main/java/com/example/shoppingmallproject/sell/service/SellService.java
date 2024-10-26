@@ -47,4 +47,12 @@ public class SellService {
 
         return updatedProduct.getId();
     }
+
+    public Long deleteProduct(Long productId) {
+        Products product = sellRepository.findById(productId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
+
+        sellRepository.delete(product);
+        return productId;
+    }
 }
