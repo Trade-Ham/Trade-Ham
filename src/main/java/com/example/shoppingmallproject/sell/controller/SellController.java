@@ -1,11 +1,14 @@
 package com.example.shoppingmallproject.sell.controller;
 
+import com.example.shoppingmallproject.sell.domain.Products;
 import com.example.shoppingmallproject.sell.dto.ProductRequest;
 import com.example.shoppingmallproject.sell.service.SellService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -30,5 +33,11 @@ public class SellController {
     public ResponseEntity<Long> deleteProduct(@PathVariable Long product_id) {
         sellService.deleteProduct(product_id);
         return ResponseEntity.ok(product_id);
+    }
+
+    @GetMapping("/products")
+    public ResponseEntity<List<Products>> getAllProducts() {
+        List<Products> products = sellService.getAllProducts();
+        return ResponseEntity.ok(products);
     }
 }
