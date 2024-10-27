@@ -1,4 +1,4 @@
-package com.trade_ham.common.response;
+package com.trade_ham.global.common.response;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

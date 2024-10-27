@@ -1,7 +1,7 @@
-package com.trade_ham.common.exception;
+package com.trade_ham.global.common.exception;
 
-import com.trade_ham.common.response.ApiResponse;
-import com.trade_ham.common.response.ErrorResponse;
+import com.trade_ham.global.common.response.ApiResponse;
+import com.trade_ham.global.common.response.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
