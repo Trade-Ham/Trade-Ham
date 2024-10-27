@@ -32,6 +32,14 @@ public class UserService {
         return savedUser;
     }
 
+    public Long getCurrentUserId() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.isAuthenticated()) {
+            return ((User) auth.getPrincipal()).getId();  // 또는 사용자의 ID를 반환하는 메서드
+        }
+        throw new IllegalStateException("인증된 사용자를 찾을 수 없습니다.");
+    }
+
     public String getCurrentUserName() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.getPrincipal() instanceof User) {

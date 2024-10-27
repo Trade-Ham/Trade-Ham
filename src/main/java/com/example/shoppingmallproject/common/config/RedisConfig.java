@@ -1,4 +1,4 @@
-package com.example.shoppingmallproject.config;
+package com.example.shoppingmallproject.common.config;
 
 import org.springframework.context.annotation.Configuration;
 

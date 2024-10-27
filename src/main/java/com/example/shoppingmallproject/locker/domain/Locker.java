@@ -21,6 +21,7 @@ public class Locker {
     @Column(name = "locker_password", length = 50)
     private String lockerPassword;
 
+    @Setter
     @Column(name = "locker_status", nullable = false)
     private Boolean lockerStatus;
 

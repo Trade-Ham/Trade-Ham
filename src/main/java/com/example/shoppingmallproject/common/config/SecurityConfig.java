@@ -1,4 +1,4 @@
-    package com.example.shoppingmallproject.config;
+    package com.example.shoppingmallproject.common.config;
 
     import com.example.shoppingmallproject.user.domain.User;
     import com.example.shoppingmallproject.user.oauth2.OAuth2LogoutSuccessHandler;
@@ -48,7 +48,7 @@
                             sessionManagement.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                     )
                     .authorizeHttpRequests(authz -> authz
-                            .requestMatchers("/", "/auth/**", "/oauth2/**", "/logout").permitAll()
+                            .requestMatchers("/", "/auth/**", "/oauth2/**", "/logout", "/api/v1/**").permitAll()
                             .requestMatchers("/admin/**").hasRole("ADMIN")
                             .anyRequest().authenticated()
                     )

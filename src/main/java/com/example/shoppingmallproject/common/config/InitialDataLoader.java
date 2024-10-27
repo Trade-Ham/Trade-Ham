@@ -1,4 +1,4 @@
-package com.example.shoppingmallproject.config;
+package com.example.shoppingmallproject.common.config;
 
 import com.example.shoppingmallproject.user.service.UserService;
 import org.springframework.boot.CommandLineRunner;

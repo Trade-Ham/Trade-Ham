@@ -1,5 +1,6 @@
 package com.example.shoppingmallproject.user.domain;
 
+import com.example.shoppingmallproject.product.domain.Product;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,6 +8,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -40,6 +43,11 @@ public class User {
     private String realname;
 
     private String profileImage;
+    @OneToMany(mappedBy = "seller")
+    private List<Product> sellingProducts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "buyer")
+    private List<Product> purchasedProducts = new ArrayList<>();
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
@@ -72,5 +80,17 @@ public class User {
 
     public void updateNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public void addSellingProduct(Product product) {
+        this.sellingProducts.add(product);
+    }
+
+    public void addPurchasedProduct(Product product) {
+        this.purchasedProducts.add(product);
+    }
+
+    public void deleteSellingProduct(Product product) {
+        this.sellingProducts.remove(product);
     }
 }
