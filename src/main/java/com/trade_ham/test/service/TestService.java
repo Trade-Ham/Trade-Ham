@@ -1,7 +1,7 @@
-package com.example.shoppingmallproject.test.service;
+package com.trade_ham.test.service;
 
-import com.example.shoppingmallproject.common.exception.AccessDeniedException;
-import com.example.shoppingmallproject.common.exception.ErrorCode;
+import com.trade_ham.common.exception.AccessDeniedException;
+import com.trade_ham.common.exception.ErrorCode;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -1,7 +1,7 @@
-package com.example.shoppingmallproject.common.exception;
+package com.trade_ham.common.exception;
 
-import com.example.shoppingmallproject.common.response.ApiResponse;
-import com.example.shoppingmallproject.common.response.ErrorResponse;
+import com.trade_ham.common.response.ApiResponse;
+import com.trade_ham.common.response.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

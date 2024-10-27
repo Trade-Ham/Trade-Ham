@@ -1,6 +1,6 @@
-package com.example.shoppingmallproject.common.response;
+package com.trade_ham.common.response;
 
-import com.example.shoppingmallproject.common.exception.ErrorCode;
+import com.trade_ham.common.exception.ErrorCode;
 import lombok.Builder;
 import lombok.Getter;
 

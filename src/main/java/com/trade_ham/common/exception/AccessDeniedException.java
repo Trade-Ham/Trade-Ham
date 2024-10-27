@@ -1,4 +1,4 @@
-package com.example.shoppingmallproject.common.exception;
+package com.trade_ham.common.exception;
 
 import lombok.Getter;
 

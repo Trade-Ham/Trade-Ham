@@ -1,13 +1,13 @@
-package com.example.shoppingmallproject;
+package com.trade_ham;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ShoppingMallProjectApplication {
+public class TradeHamApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(ShoppingMallProjectApplication.class, args);
+        SpringApplication.run(TradeHamApplication.class, args);
     }
 
 }

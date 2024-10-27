@@ -1,8 +1,8 @@
-package com.example.shoppingmallproject.test.controller;
+package com.trade_ham.test.controller;
 
 
-import com.example.shoppingmallproject.common.response.ApiResponse;
-import com.example.shoppingmallproject.test.service.TestService;
+import com.trade_ham.common.response.ApiResponse;
+import com.trade_ham.test.service.TestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

@@ -1,4 +1,4 @@
-package com.example.shoppingmallproject.common.response;
+package com.trade_ham.common.response;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
