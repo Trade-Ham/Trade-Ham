@@ -1,17 +1,18 @@
 package com.example.shoppingmallproject.product.service;
 
-import com.example.shoppingmallproject.common.exception.AccessDeniedException;
-import com.example.shoppingmallproject.common.exception.InvalidProductStateException;
-import com.example.shoppingmallproject.common.exception.ResourceNotFoundException;
-import com.example.shoppingmallproject.locker.domain.Locker;
-import com.example.shoppingmallproject.locker.repository.LockerRepository;
-import com.example.shoppingmallproject.product.domain.Product;
-import com.example.shoppingmallproject.product.domain.ProductStatus;
-import com.example.shoppingmallproject.product.domain.Trade;
-import com.example.shoppingmallproject.product.repository.ProductRepository;
-import com.example.shoppingmallproject.product.repository.TradeRepository;
-import com.example.shoppingmallproject.user.domain.User;
-import com.example.shoppingmallproject.user.repository.UserRepository;
+import com.trade_ham.domain.auth.entity.UserEntity;
+import com.trade_ham.domain.auth.repository.UserRepository;
+import com.trade_ham.domain.locker.domain.Locker;
+import com.trade_ham.domain.locker.repository.LockerRepository;
+import com.trade_ham.domain.product.domain.Product;
+import com.trade_ham.domain.product.domain.ProductStatus;
+import com.trade_ham.domain.product.domain.Trade;
+import com.trade_ham.domain.product.repository.ProductRepository;
+import com.trade_ham.domain.product.repository.TradeRepository;
+import com.trade_ham.domain.product.service.PurchaseProductService;
+import com.trade_ham.global.common.exception.AccessDeniedException;
+import com.trade_ham.global.common.exception.InvalidProductStateException;
+import com.trade_ham.global.common.exception.ResourceNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -79,7 +80,7 @@ class PurchaseProductServiceTest {
         Locker locker = new Locker();
         locker.setLockerStatus(true);
 
-        User buyer = new User();
+        UserEntity buyer = new UserEntity();
         Trade trade = new Trade().setProduct(product).setBuyer(buyer).setLocker(locker);
 
         when(productRepository.findById(productId)).thenReturn(Optional.of(product));

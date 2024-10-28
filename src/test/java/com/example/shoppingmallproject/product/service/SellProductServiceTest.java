@@ -1,12 +1,13 @@
 package com.example.shoppingmallproject.product.service;
 
-import com.example.shoppingmallproject.common.exception.ResourceNotFoundException;
-import com.example.shoppingmallproject.product.domain.Product;
-import com.example.shoppingmallproject.product.dto.ProductDTO;
-import com.example.shoppingmallproject.product.dto.ProductResponseDTO;
-import com.example.shoppingmallproject.product.repository.ProductRepository;
-import com.example.shoppingmallproject.user.domain.User;
-import com.example.shoppingmallproject.user.repository.UserRepository;
+import com.trade_ham.domain.auth.entity.UserEntity;
+import com.trade_ham.domain.auth.repository.UserRepository;
+import com.trade_ham.domain.product.domain.Product;
+import com.trade_ham.domain.product.dto.ProductDTO;
+import com.trade_ham.domain.product.dto.ProductResponseDTO;
+import com.trade_ham.domain.product.repository.ProductRepository;
+import com.trade_ham.domain.product.service.SellProductService;
+import com.trade_ham.global.common.exception.ResourceNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -40,7 +41,7 @@ class SellProductServiceTest {
     void testCreateProduct_Success() {
         Long sellerId = 1L;
         ProductDTO productDTO = new ProductDTO("실무 피그마", "피그마 책입니다.", 10000L);
-        User seller = new User();
+        UserEntity seller = new UserEntity();
 
         when(userRepository.findById(sellerId)).thenReturn(Optional.of(seller));
         Product product = new Product().setSeller(seller);
