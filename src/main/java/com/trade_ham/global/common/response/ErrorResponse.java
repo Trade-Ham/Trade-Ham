@@ -1,6 +1,6 @@
-package com.trade_ham.common.response;
+package com.trade_ham.global.common.response;
 
-import com.trade_ham.common.exception.ErrorCode;
+import com.trade_ham.global.common.exception.ErrorCode;
 import lombok.Builder;
 import lombok.Getter;
 

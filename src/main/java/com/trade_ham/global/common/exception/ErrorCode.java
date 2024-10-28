@@ -1,4 +1,4 @@
-package com.trade_ham.common.exception;
+package com.trade_ham.global.common.exception;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
