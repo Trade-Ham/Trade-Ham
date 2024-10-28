@@ -10,6 +10,8 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -23,6 +25,12 @@ import java.util.Iterator;
 @Component
 @RequiredArgsConstructor
 public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
+
+    @Value("${spring.jwt.token.access-expiration-time}")
+    private long accessTokenExpirationTime;
+
+    @Value("${spring.jwt.token.refresh-expiration-time}")
+    private long refreshTokenExpirationTime;
 
     private final JWTUtil jwtUtil;
     private final RefreshRepository refreshRepository;
@@ -44,11 +52,11 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         String role = auth.getAuthority();
 
         // 토큰 생성
-        String access = jwtUtil.createJwt("access", username, email, role, 600000L);
-        String refresh = jwtUtil.createJwt("refresh", username, email, role, 86400000L);
+        String access = jwtUtil.createJwt("access", username, email, role, accessTokenExpirationTime);
+        String refresh = jwtUtil.createJwt("refresh", username, email, role, refreshTokenExpirationTime);
 
         //Refresh 토큰 저장
-        addRefreshEntity(username, refresh, 86400000L);
+        addRefreshEntity(username, refresh, refreshTokenExpirationTime);
 
         //응답 설정
         response.setHeader("access", access); // 응답헤더에 엑세스 토큰
@@ -72,7 +80,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     private Cookie createCookie(String key, String value) {
 
         Cookie cookie = new Cookie(key, value);
-        cookie.setMaxAge(24*60*60);
+        cookie.setMaxAge((int)refreshTokenExpirationTime);
 //        cookie.setSecure(true);
         cookie.setPath("/");
         cookie.setHttpOnly(true);
