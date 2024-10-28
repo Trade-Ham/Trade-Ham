@@ -34,8 +34,9 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         //OAuth2User
         CustomOAuth2User customUserDetails = (CustomOAuth2User) authentication.getPrincipal();
 
-        String email = customUserDetails.getEmail();
         String username = customUserDetails.getUsername();
+        String email = customUserDetails.getEmail();
+
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
@@ -47,7 +48,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         String refresh = jwtUtil.createJwt("refresh", username, email, role, 86400000L);
 
         //Refresh 토큰 저장
-        addRefreshEntity(email, refresh, 86400000L);
+        addRefreshEntity(username, refresh, 86400000L);
 
         //응답 설정
         response.setHeader("access", access); // 응답헤더에 엑세스 토큰
@@ -64,7 +65,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         refreshEntity.setRefresh(refresh);
         refreshEntity.setExpiration(date.toString());
 
-//        redisRefreshService.saveRefreshToken(refresh);
+        redisRefreshService.saveRefreshToken(username, refresh, expiredMs);
         refreshRepository.save(refreshEntity);
     }
 
