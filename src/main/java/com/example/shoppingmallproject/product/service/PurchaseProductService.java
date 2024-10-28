@@ -73,9 +73,11 @@ public class PurchaseProductService {
         Locker availableLocker = lockerRepository.findFirstByLockerStatusTrue()
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.LOCKER_NOT_AVAILABLE));
 
-        // 사물함 상태를 잠그기 (false로 변경)
         availableLocker.setLockerStatus(false);
         lockerRepository.save(availableLocker);
+
+        product.setLocker(availableLocker);
+        productRepository.save(product);
 
         // 거래 내역 생성
         User buyer = userRepository.findById(buyerId)

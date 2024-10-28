@@ -16,6 +16,7 @@ public class LockerController {
 
     private final LockerRepository lockerRepository;
 
+
     @GetMapping
     public List<Locker> getAllLockers() {
         return lockerRepository.findAll();

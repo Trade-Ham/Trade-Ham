@@ -1,9 +1,11 @@
 package com.example.shoppingmallproject.product.domain;
 
+import com.example.shoppingmallproject.locker.domain.Locker;
 import com.example.shoppingmallproject.user.domain.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -36,6 +38,12 @@ public class Product {
 
     @Column(nullable = false)
     private Long price;
+
+    @Setter
+    @OneToOne
+    @JoinColumn(name = "locker_id")
+    private Locker locker;
+
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
