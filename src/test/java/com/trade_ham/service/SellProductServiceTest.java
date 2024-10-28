@@ -1,4 +1,4 @@
-package com.example.shoppingmallproject.product.service;
+package com.trade_ham.service;
 
 import com.trade_ham.domain.auth.entity.UserEntity;
 import com.trade_ham.domain.auth.repository.UserRepository;

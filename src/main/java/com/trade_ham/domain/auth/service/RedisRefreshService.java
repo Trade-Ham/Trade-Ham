@@ -13,22 +13,22 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class RedisRefreshService {
 
-    private final RedisTemplate<Long, String> redisTemplate;
+    private final RedisTemplate<String, String> redisTemplate;
 
     // 리프레시 토큰 저장 (TTL 설정)
     public void saveRefreshToken(Long id, String refreshToken, long expirationTimeInMillis) {
-        ValueOperations<Long, String> valueOperations = redisTemplate.opsForValue();
-        valueOperations.set(id, refreshToken, expirationTimeInMillis, TimeUnit.MILLISECONDS);
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+        valueOperations.set(String.valueOf(id), refreshToken, expirationTimeInMillis, TimeUnit.MILLISECONDS);
     }
 
     public String getRefreshToken(String userName) {
-        ValueOperations<Long, String> valueOperations = redisTemplate.opsForValue();
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
         return valueOperations.get(userName);
     }
 
     public void deleteRefreshToken(Long id) {
         log.info(String.valueOf(id));
-        redisTemplate.delete(id);
+        redisTemplate.delete(String.valueOf(id));
     }
 
     public boolean hasValidRefreshToken(String userName, String refreshToken) {
