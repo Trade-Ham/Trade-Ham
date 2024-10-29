@@ -10,21 +10,17 @@ import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.filter.GenericFilterBean;
 
 import java.io.IOException;
 
+@RequiredArgsConstructor
 public class CustomLogoutFilter extends GenericFilterBean {
 
     private final JWTUtil jwtUtil;
     private final RefreshService refreshService;
     private final CookieUtil cookieUtil;
-
-    public CustomLogoutFilter(JWTUtil jwtUtil, RefreshService refreshService, CookieUtil cookieUtil) {
-        this.jwtUtil = jwtUtil;
-        this.refreshService = refreshService;
-        this.cookieUtil = cookieUtil;
-    }
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -55,26 +51,26 @@ public class CustomLogoutFilter extends GenericFilterBean {
 
         if (refresh == null) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return ;
+            return;
         }
 
         try {
             jwtUtil.isExpired(refresh);
         } catch (ExpiredJwtException e) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return ;
+            return;
         }
 
         String category = jwtUtil.getCategory(refresh);
         if (!category.equals("refresh")) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return ;
+            return;
         }
 
         Boolean isExist = refreshService.existsByRefresh(refresh);
         if (!isExist) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return ;
+            return;
         }
 
         //로그아웃 구현

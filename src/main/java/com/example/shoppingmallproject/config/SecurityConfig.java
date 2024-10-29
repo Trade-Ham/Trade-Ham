@@ -36,47 +36,80 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        return http
+                // CSRF 비활성화
+                .csrf(auth -> auth.disable())
 
-        //csrf disable
-        http
-                .csrf((auth) -> auth.disable());
+                // Form 로그인 방식 비활성화
+                .formLogin(auth -> auth.disable())
 
-        //From 로그인 방식 disable
-        http
-                .formLogin((auth) -> auth.disable());
+                // HTTP Basic 인증 방식 비활성화
+                .httpBasic(auth -> auth.disable())
 
-        //HTTP Basic 인증 방식 disable
-        http
-                .httpBasic((auth) -> auth.disable());
+                // JWT 필터 추가
+                .addFilterAfter(new JWTFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class)
 
-        //JWTFilter 추가
-        http
-                .addFilterAfter(new JWTFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class);
-
-        //oauth2
-        http
-                .oauth2Login((oauth2) -> oauth2
+                // OAuth2 로그인 설정
+                .oauth2Login(oauth2 -> oauth2
                         .loginPage("/login")
-                        .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
-                                .userService(customOAuth2UserService))
-                        .successHandler(customSuccessHandler));
-//        http
-//                .oauth2Login(Customizer.withDefaults());
+                        .userInfoEndpoint(userInfoEndpointConfig ->
+                                userInfoEndpointConfig.userService(customOAuth2UserService))
+                        .successHandler(customSuccessHandler))
 
-        http
-                .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshService, cookieUtil), LogoutFilter.class);
+                // 커스텀 로그아웃 필터 추가
+                .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshService, cookieUtil), LogoutFilter.class)
 
-        //경로별 인가 작업
-        http
-                .authorizeHttpRequests((auth) -> auth
+                // 경로별 인가 작업
+                .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login", "/welcome", "/refresh", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                        .anyRequest().authenticated());
+                        .anyRequest().authenticated())
 
-        //세션 설정 : STATELESS
-        http
-                .sessionManagement((session) -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
-        return http.build();
+                // 세션 설정 : STATELESS
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .build();
     }
+
+//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+//
+//        //csrf disable
+//        http
+//                .csrf((auth) -> auth.disable());
+//
+//        //From 로그인 방식 disable
+//        http
+//                .formLogin((auth) -> auth.disable());
+//
+//        //HTTP Basic 인증 방식 disable
+//        http
+//                .httpBasic((auth) -> auth.disable());
+//
+//        //JWTFilter 추가
+//        http
+//                .addFilterAfter(new JWTFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class);
+//
+//        //oauth2
+//        http
+//                .oauth2Login((oauth2) -> oauth2
+//                        .loginPage("/login")
+//                        .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
+//                                .userService(customOAuth2UserService))
+//                        .successHandler(customSuccessHandler));
+//
+//        http
+//                .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshService, cookieUtil), LogoutFilter.class);
+//
+//        //경로별 인가 작업
+//        http
+//                .authorizeHttpRequests((auth) -> auth
+//                        .requestMatchers("/login", "/welcome", "/refresh", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+//                        .anyRequest().authenticated());
+//
+//        //세션 설정 : STATELESS
+//        http
+//                .sessionManagement((session) -> session
+//                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+//
+//        return http.build();
+//    }
 }

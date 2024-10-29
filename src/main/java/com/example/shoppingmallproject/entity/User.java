@@ -9,7 +9,7 @@ import java.sql.Timestamp;
 @Entity
 @Table(name = "user")
 @Getter @Setter
-public class User {
+public class User extends Base {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,7 +31,4 @@ public class User {
 
     private String account;
     private String realname;
-
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
 }

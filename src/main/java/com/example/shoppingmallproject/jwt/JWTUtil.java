@@ -1,12 +1,15 @@
 package com.example.shoppingmallproject.jwt;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
+import java.security.Key;
 import java.util.Date;
 
 @Component
@@ -54,5 +57,23 @@ public class JWTUtil {
                 .expiration(new Date(System.currentTimeMillis() + expiredMs))
                 .signWith(secretKey)
                 .compact();
+    }
+
+    // 토큰에서 클레임 추출
+    private Claims extractAllClaims(String token) {
+        return Jwts.parser()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    // 특정 클레임 추출
+    private String extractClaim(String token, String claimKey) {
+        return extractAllClaims(token).get(claimKey, String.class);
+    }
+
+    public String getEmailInService(String token) {
+        return extractClaim(token, "email");
     }
 }

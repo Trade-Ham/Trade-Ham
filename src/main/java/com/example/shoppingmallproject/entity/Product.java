@@ -4,12 +4,10 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.sql.Timestamp;
-
 @Entity
 @Getter @Setter
 @Table(name = "product")
-public class Product {
+public class Product extends Base {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +25,4 @@ public class Product {
     private Status status;
 
     private Long price;
-
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
 }

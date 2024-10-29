@@ -9,7 +9,7 @@ import java.sql.Timestamp;
 @Entity
 @Getter @Setter
 @Table(name = "trade")
-public class Trade {
+public class Trade extends Base {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,7 +31,4 @@ public class Trade {
     @ManyToOne
     @JoinColumn(name = "locker_id")
     private Locker locker;
-
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
 }

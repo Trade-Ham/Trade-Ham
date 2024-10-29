@@ -4,12 +4,10 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.sql.Timestamp;
-
 @Entity
 @Getter @Setter
 @Table(name = "album")
-public class Album {
+public class Album extends Base {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +20,4 @@ public class Album {
 
     private String imageUrl;
     private Double fileSize;
-
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
 }

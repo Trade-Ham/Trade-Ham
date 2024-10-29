@@ -10,12 +10,6 @@ public class KakaoResponse implements OAuth2Response {
         this.attributes = attributes;
     }
 
-//    @Override
-//    public String getNickname() {
-//        Map<String, Object> properties = (Map<String, Object>) attributes.get("properties");
-//        return properties.get("nickname").toString();
-//    }
-
     @Override
     public String getNickname() {
         Map<String, Object> properties = (Map<String, Object>) attributes.get("properties");

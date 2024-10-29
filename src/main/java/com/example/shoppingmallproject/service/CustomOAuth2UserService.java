@@ -8,6 +8,7 @@ import com.example.shoppingmallproject.entity.Provider;
 import com.example.shoppingmallproject.entity.Role;
 import com.example.shoppingmallproject.entity.User;
 import com.example.shoppingmallproject.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -17,13 +18,10 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 
 @Service
+@RequiredArgsConstructor
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private final UserRepository userRepository;
-
-    public CustomOAuth2UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -91,5 +89,24 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
             return new CustomOAuth2User(userDTO);
         }
+    }
+
+    private User setUser(OAuth2Response oAuth2Response, Role role) {
+        User user = new User();
+        user.setNickname(oAuth2Response.getNickname());
+        user.setEmail(oAuth2Response.getEmail());
+        user.setProfileImage(oAuth2Response.getProfileImage());
+        user.setRole(role);
+        user.setProvider(Provider.KAKAO);
+        return user;
+    }
+
+    private UserDTO createUserDTO(OAuth2Response oAuth2Response, Role role) {
+        UserDTO userDTO = new UserDTO();
+        userDTO.setNickname(oAuth2Response.getNickname());
+        userDTO.setEmail(oAuth2Response.getEmail());
+        userDTO.setProfileImage(oAuth2Response.getProfileImage());
+        userDTO.setRole(role);
+        return userDTO;
     }
 }

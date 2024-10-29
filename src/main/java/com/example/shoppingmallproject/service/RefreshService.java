@@ -8,14 +8,14 @@ import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.concurrent.TimeUnit;
-
 @Service
+@RequiredArgsConstructor
 public class RefreshService {
 
     private final JWTUtil jwtUtil;
@@ -23,19 +23,12 @@ public class RefreshService {
     private final RefreshRepository refreshRepository;
     private final RedisTemplate<String, Object> redisTemplate;
 
-    public RefreshService(JWTUtil jwtUtil, CookieUtil cookieUtil, RefreshRepository refreshRepository, RedisTemplate<String, Object> redisTemplate) {
-        this.jwtUtil = jwtUtil;
-        this.cookieUtil = cookieUtil;
-        this.refreshRepository = refreshRepository;
-        this.redisTemplate = redisTemplate;
-    }
-
     public void saveRefreshToken(Refresh refresh, Long expiredMs) {
         //Refresh 엔티티를 redis에 저장
         refreshRepository.save(refresh);
 
         //TTL 설정
-        redisTemplate.expire("KTB.BackendStudy.entity.Refresh:" + refresh.getRefresh(), expiredMs / 1000, TimeUnit.SECONDS);
+//        redisTemplate.expire("KTB.BackendStudy.entity.Refresh:" + refresh.getRefresh(), expiredMs / 1000, TimeUnit.SECONDS);
 //        redisTemplate.expire("KTB.BackendStudy.entity.Refresh:eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6InJlZnJlc2giLCJ1c2VybmFtZSI6IuuwleywrOyYgSIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzI4NDU4OTExLCJleHAiOjE3Mjg1NDUzMTF9.zQvcX3I04VpQWvAdQbzHA_VRLKlWgPLSNb_4xh3782E", 3600, TimeUnit.SECONDS);
     }
 

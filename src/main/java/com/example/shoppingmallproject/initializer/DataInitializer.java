@@ -2,19 +2,17 @@ package com.example.shoppingmallproject.initializer;
 
 import com.example.shoppingmallproject.entity.Locker;
 import com.example.shoppingmallproject.repository.LockerRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.util.Random;
 
 @Component
+@RequiredArgsConstructor
 public class DataInitializer implements CommandLineRunner {
 
     private final LockerRepository lockerRepository;
-
-    public DataInitializer(LockerRepository lockerRepository) {
-        this.lockerRepository = lockerRepository;
-    }
 
     @Override
     public void run(String... args) throws Exception {
