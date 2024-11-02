@@ -19,10 +19,10 @@ public class LockerController {
     /**
      * 특정 번호의 사물함을 할당하는 API
      */
-    @PostMapping("/{locker_number}")
-    public ResponseEntity<Locker> assignLocker(@PathVariable("locker_number") int lockerNumber) {
+    @PostMapping("/assign")
+    public ResponseEntity<Locker> assignLocker() {
         try {
-            Locker assignedLocker = lockerService.assignLocker(lockerNumber);
+            Locker assignedLocker = lockerService.assignLocker();
             return ResponseEntity.ok(assignedLocker);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
@@ -36,7 +36,7 @@ public class LockerController {
     public ResponseEntity<List<Locker>> retrieveAllAvailableLockers() {
         List<Locker> availableLockers = lockerService.retrieveAllAvailableLockers();
         if (availableLockers.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+            return ResponseEntity.noContent().build();  // body 없이 응답
         }
         return ResponseEntity.ok(availableLockers);
     }

@@ -1,6 +1,7 @@
 package com.example.shoppingmallproject.purchase.controller;
 
 import com.example.shoppingmallproject.purchase.service.PurchaseService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +21,8 @@ public class PurchaseController {
      * 구매자는 물건 상세 설명을 확인하고 구매 버튼을 클릭한다
      */
     @GetMapping("/purchase-page/{product_id}")
-    public ResponseEntity<String> startPurchase(@PathVariable Long product_id) {
-        boolean success = purchaseService.startPurchase(product_id);
+    public ResponseEntity<String> startPurchase(@PathVariable Long product_id, HttpServletRequest request) {
+        boolean success = purchaseService.startPurchase(product_id, request);
         return success ? ResponseEntity.ok("Purchase started successfully.")
                 : ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to start purchase.");
     }
