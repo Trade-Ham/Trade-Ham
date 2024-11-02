@@ -1,37 +1,21 @@
 package com.example.shoppingmallproject.config;
 
-import com.example.shoppingmallproject.login.controller.AuthController;
-import com.example.shoppingmallproject.login.domain.User;
-import com.example.shoppingmallproject.login.dto.TokenResponseDto;
 import com.example.shoppingmallproject.login.oauth2.CustomSuccessHandler;
 import com.example.shoppingmallproject.login.security.CustomLogoutFilter;
 import com.example.shoppingmallproject.login.security.JwtAuthenticationFilter;
 import com.example.shoppingmallproject.login.security.JwtTokenProvider;
-import com.example.shoppingmallproject.login.service.AuthService;
 import com.example.shoppingmallproject.login.service.CustomOAuth2UserService;
 import com.example.shoppingmallproject.login.service.RedisService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.oauth2.client.web.OAuth2AuthorizationCodeGrantFilter;
 import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity

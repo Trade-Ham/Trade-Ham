@@ -32,17 +32,15 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
-        OAuth2Response oAuth2Response = null;
-        if (registrationId.equals("kakao")) {
-            // 사용자 정보를 가져옴
-            oAuth2Response = new OAuth2Response(oAuth2User.getAttributes(), "USER");
-        } else {
+        OAuth2Response oAuth2Response;
+        // 사용자 정보를 가져옴
+        if (registrationId.equals("kakao")) oAuth2Response = new OAuth2Response(oAuth2User.getAttributes(), "USER");
+        else {
             throw new OAuth2AuthenticationException("잘못된 registration id 입니다.");
         }
 
-        OAuth2Response finalOAuth2Response = oAuth2Response;
         User user = userRepository.findByEmail(oAuth2Response.getEmail())
-                .orElseGet(() -> createUser(finalOAuth2Response));
+                .orElseGet(() -> createUser(oAuth2Response));
 
         UserDTO userDTO = new UserDTO();
         userDTO.setNickname(user.getNickname());

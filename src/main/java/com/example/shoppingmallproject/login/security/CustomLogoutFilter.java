@@ -21,6 +21,8 @@ public class CustomLogoutFilter extends GenericFilterBean {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        HttpServletRequest h_request = (HttpServletRequest) request;
+        HttpServletResponse h_response = (HttpServletResponse) response;
         doFilter((HttpServletRequest) request, (HttpServletResponse) response, chain);
     }
 
@@ -59,8 +61,8 @@ public class CustomLogoutFilter extends GenericFilterBean {
         }
 
         //db check
-        String email = jwtTokenProvider.getUserEmail(refresh);
-        String storedRefreshToken = redisService.getRefreshToken(email);
+        Long userId = jwtTokenProvider.getUserId(refresh);
+        String storedRefreshToken = redisService.getRefreshToken(userId.toString());
         if (storedRefreshToken == null || !storedRefreshToken.equals(refresh)) {
             if (!storedRefreshToken.equals(refresh)) {
                 redisService.deleteRefreshToken(storedRefreshToken);
@@ -70,7 +72,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
         }
 
         //logout
-        redisService.deleteRefreshToken(email);
+        redisService.deleteRefreshToken(userId.toString());
 
         Cookie cookie = new Cookie("refresh", null);
         cookie.setMaxAge(0);

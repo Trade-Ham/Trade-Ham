@@ -11,10 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
 
 import java.net.URI;
-import java.util.Map;
 
 @Slf4j
 @RestController
@@ -23,7 +21,6 @@ import java.util.Map;
 public class AuthController {
 
     private final AuthService authService;
-    private final JwtTokenProvider jwtTokenProvider;
 
     /**
      * 카카오 로그인 URL로 리디렉션

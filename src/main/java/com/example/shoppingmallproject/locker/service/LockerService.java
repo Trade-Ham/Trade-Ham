@@ -10,15 +10,22 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class LockerService {
-    
+
     private final LockerRepository lockerRepository;
 
     /**
-     * 특정 번호의 사물함을 할당하는 메소드
+     * 가장 낮은 번호의 빈 사물함을 할당하는 메소드
      */
-    public Locker assignLocker(int lockerNumber) {
-        Locker locker = lockerRepository.findByLockerNumberAndLockerStatusFalse(lockerNumber)
-                .orElseThrow(() -> new RuntimeException("No available locker with that number."));
+    public Locker assignLocker() {
+        Locker locker = lockerRepository.findFirstByLockerStatusFalseOrderByLockerNumberAsc()
+                .orElseThrow(() -> new RuntimeException("No available lockers."));
+        locker.setLockerStatus(false);
+        return lockerRepository.save(locker);
+    }
+
+    public Locker unlockLocker(Long locker_id) {
+        Locker locker = lockerRepository.findById(locker_id)
+                .orElseThrow(() -> new RuntimeException("Locker Not Found."));
         locker.setLockerStatus(true);
         return lockerRepository.save(locker);
     }

@@ -55,9 +55,9 @@ public class AuthService {
             throw new RuntimeException("OAuth2 사용자 정보가 없습니다.");
         }
         CustomOAuth2User customUserDetails = (CustomOAuth2User) authentication.getPrincipal();
-        String email = customUserDetails.getEmail();
+        Long userId = customUserDetails.getId();
 
-        Optional<User> userOptional = userRepository.findByEmail(email);
+        Optional<User> userOptional = userRepository.findById(userId);
         if (userOptional.isEmpty()) {
             throw new RuntimeException("사용자 정보를 찾을 수 없습니다.");
         }
@@ -67,8 +67,8 @@ public class AuthService {
         // JWT Access Token 및 Refresh Token 생성
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
 
-        String accessToken = jwtTokenProvider.createAccessToken(user.getEmail(), authorities);
-        String refreshToken = jwtTokenProvider.createRefreshToken(user.getEmail());
+        String accessToken = jwtTokenProvider.createAccessToken(user.getId(), authorities);
+        String refreshToken = jwtTokenProvider.createRefreshToken(user.getId());
 
         return new TokenResponseDto(accessToken, refreshToken, user);
     }
@@ -78,9 +78,9 @@ public class AuthService {
      * Refresh Token을 사용하여 새로운 Access Token 발급
      */
     public TokenResponseDto refreshJwtTokens(HttpServletResponse response, String refreshToken) {
-        String email = jwtTokenProvider.getUserEmail(refreshToken);
+        String userId = redisService.getUserIdByRefreshToken(refreshToken);
         // Refresh Token이 Redis에 존재하는지 확인
-        String storedRefreshToken = redisService.getRefreshToken(email);
+        String storedRefreshToken = redisService.getRefreshToken(userId);
 
         if (storedRefreshToken == null || !storedRefreshToken.equals(refreshToken)) {
             //refresh token도 재생성 -> 하면 안됨 -> 탈취된 토큰을 가져왔을 때 재생성됨 -> 로그인창으로 보내서 새로 로그인하게 만들게 하면 refresh token은 알아서 생성됨
@@ -89,11 +89,11 @@ public class AuthService {
             }
             throw new IllegalArgumentException("Refresh Token이 유효하지 않거나 만료되었습니다.");
         }
-        String newAccessToken = jwtTokenProvider.createAccessToken(email, jwtTokenProvider.getRoles(refreshToken));
-        String newRefreshToken = jwtTokenProvider.createRefreshToken(email);
+        String newAccessToken = jwtTokenProvider.createAccessToken(Long.parseLong(userId), jwtTokenProvider.getRoles(refreshToken));
+        String newRefreshToken = jwtTokenProvider.createRefreshToken(Long.parseLong(userId));
 
         redisService.deleteRefreshToken(storedRefreshToken);
-        redisService.saveRefreshToken(email, newRefreshToken, Duration.ofDays(7));
+        redisService.saveRefreshToken(userId, newRefreshToken, Duration.ofDays(7));
 
         response.setHeader("access", newAccessToken);
         response.addCookie(createCookie("refresh", newRefreshToken, Duration.ofDays(7)));
@@ -101,8 +101,8 @@ public class AuthService {
     }
 
     public void updateUserInfo(String accessToken, UpdateUserInfoRequest request) {
-        String email = jwtTokenProvider.getUserEmail(accessToken);
-        User user = userRepository.findByEmail(email)
+        Long userId = jwtTokenProvider.getUserId(accessToken);
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."));
 
         user.setAccount(request.getAccount());

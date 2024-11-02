@@ -9,6 +9,10 @@ import java.util.Optional;
 
 @Repository
 public interface LockerRepository extends JpaRepository<Locker, Long> {
-    Optional<Locker> findByLockerNumberAndLockerStatusFalse(int lockerNumber);
-    List<Locker> findAllByLockerStatusFalse();  // 모든 비어있는 사물함 조회
+
+    // 현재 사용되지 않은 빈 사물함을 lockerNumber 순서로 정렬하여 가장 낮은 번호의 사물함을 가져오는 쿼리
+    Optional<Locker> findFirstByLockerStatusFalseOrderByLockerNumberAsc();
+
+    // 모든 사용 가능한 빈 사물함을 반환
+    List<Locker> findAllByLockerStatusFalse();
 }

@@ -16,8 +16,8 @@ public class RedisConfig {
         redisTemplate.setConnectionFactory(connectionFactory);
 
         // Key와 Value를 각각의 Serializer로 설정
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+        redisTemplate.setKeySerializer(new StringRedisSerializer()); //Key는 문자열로 직렬화(저장)
+        redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer()); // Value는 JSON 형식으로 직렬화(저장)
         
         return redisTemplate;
     }

@@ -32,7 +32,7 @@ public class SellService {
 
         // 생성자로 가능하지 않나 setter 쓰는 것보다
         Products product = new Products();
-        product.setSellerId(seller);
+        product.setSeller(seller);
         product.setProductName(productRequest.getProductName());
         product.setProductDescription(productRequest.getDescription());
         product.setPrice(productRequest.getPrice());
@@ -71,7 +71,7 @@ public class SellService {
     public List<Products> getMyProducts(HttpServletRequest request) {
 
         Long userId = jwtTokenProvider.checkTokenValidity(request);
-        User userInfo = userRepository.findById(userId)
+        User userInfo = userRepository.findUserWithProductsById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
         return userInfo.getProducts();

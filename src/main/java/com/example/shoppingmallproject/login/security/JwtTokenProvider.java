@@ -7,6 +7,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,7 +15,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Key;
 import java.util.Base64;
@@ -50,8 +51,9 @@ public class JwtTokenProvider {
     /**
      * JWT Access Token 생성
      */
-    public String createAccessToken(String userEmail, Collection<? extends GrantedAuthority> roles) {
-        Claims claims = Jwts.claims().setSubject(userEmail);
+    public String createAccessToken(Long userId, Collection<? extends GrantedAuthority> roles) {
+        Claims claims = Jwts.claims();
+        claims.put("userId", userId);
         claims.put("roles", roles.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
 
         Date now = new Date();
@@ -69,12 +71,15 @@ public class JwtTokenProvider {
     /**
      * JWT Refresh Token 생성
      */
-    public String createRefreshToken(String userEmail) {
+    public String createRefreshToken(Long userId) {
         Date now = new Date();
         Date validity = new Date(now.getTime() + refreshTokenValidity);
 
+        Claims claims = Jwts.claims();
+        claims.put("userId", userId);
+
         return Jwts.builder()
-                .setSubject(userEmail)
+                .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(validity)
                 .signWith(key, SignatureAlgorithm.HS256)
@@ -85,7 +90,7 @@ public class JwtTokenProvider {
      * JWT 토큰에서 인증 정보 조회
      */
     public Authentication getAuthentication(String token) {
-        UserDetails userDetails = new User(getUserEmail(token), "", getRoles(token));
+        UserDetails userDetails = new User(getUserId(token).toString(), "", getRoles(token));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
@@ -101,8 +106,13 @@ public class JwtTokenProvider {
     /**
      * JWT 토큰에서 사용자 이메일 추출
      */
-    public String getUserEmail(String token) {
-        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().getSubject();
+    public Long getUserId(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+        return claims.get("userId", Long.class);
     }
 
     /**
@@ -127,6 +137,19 @@ public class JwtTokenProvider {
         } catch (Exception e) {
             return true;
         }
+    }
+
+    public Long checkTokenValidity(HttpServletRequest request) {
+        String token = resolveToken(request);
+
+        if (token == null || !validateToken(token)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다.");
+        }
+
+        if (isTokenExpired(token)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "토큰이 만료되었습니다.");
+        }
+        return getUserId(token);
     }
 
     /**
