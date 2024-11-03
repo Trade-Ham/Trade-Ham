@@ -38,12 +38,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         }
 
         //리소스 서버에서 발급 받은 정보로 사용자를 특정할 아이디값을 만듬
-        String username = oAuth2Response.getProvider() + " " + oAuth2Response.getProviderId();
-        UserEntity existData = userRepository.findByUsername(username);
+        UserEntity existData = userRepository.findByProviderAndEmail(oAuth2Response.getProvider(), oAuth2Response.getEmail());
 
         if (existData == null) {
             UserEntity userEntity = new UserEntity();
-            userEntity.setUsername(username); // ex) kakao 3664463254
             userEntity.setEmail(oAuth2Response.getEmail()); // ex) tiger1650@naver.com
             userEntity.setProvider(oAuth2Response.getProvider()); // KAKAO
             userEntity.setNickname(oAuth2Response.getNickName()); // ex) 이용우
@@ -53,7 +51,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             userRepository.save(userEntity);
 
             UserDTO userDTO = new UserDTO();
-            userDTO.setUsername(username);
+
+            userDTO.setId(userRepository.findByProviderAndEmail(oAuth2Response.getProvider(), oAuth2Response.getEmail()).getUser_id());
             userDTO.setEmail(oAuth2Response.getEmail());
             userDTO.setNickname(oAuth2Response.getNickName());
             userDTO.setRole(Role.USER);
@@ -63,10 +62,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         }
         else{ // 이미 존재한다면
             UserDTO userDTO = new UserDTO();
-            userDTO.setUsername(username);
+            userDTO.setId(existData.getUser_id());
             userDTO.setNickname(existData.getNickname());
             userDTO.setEmail(existData.getEmail());
             userDTO.setRole(existData.getRole());
+
             return new CustomOAuth2User(userDTO);
         }
 

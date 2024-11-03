@@ -28,12 +28,12 @@ public class AuthService {
             return validationResponse; // 에러가 있을 경우 반환
         }
 
-        String username = jwtUtil.getUsername(refresh);
+        Long id = jwtUtil.getId(refresh);
         String email = jwtUtil.getEmail(refresh);
         String role = jwtUtil.getRole(refresh);
 
         // 새로운 JWT 생성
-        String newAccess = jwtUtil.createJwt("access", username, email, role, 600000L);
+        String newAccess = jwtUtil.createJwt("access", id, email, role, 600000L);
 
         // 응답 설정
         response.setHeader("access", newAccess);
@@ -48,17 +48,17 @@ public class AuthService {
             return validationResponse; // 에러가 있을 경우 반환
         }
 
-        String username = jwtUtil.getUsername(refresh);
+        Long id = jwtUtil.getId(refresh);
         String email = jwtUtil.getEmail(refresh);
         String role = jwtUtil.getRole(refresh);
 
         // 새로운 JWT 생성
-        String newAccess = jwtUtil.createJwt("access", username, email, role, 600000L);
-        String newRefresh = jwtUtil.createJwt("refresh", username, email, role, 86400000L);
+        String newAccess = jwtUtil.createJwt("access", id, email, role, 600000L);
+        String newRefresh = jwtUtil.createJwt("refresh", id, email, role, 86400000L);
 
         // DB에서 기존의 Refresh 토큰 삭제 후 새로운 토큰 저장
         refreshRepository.deleteByRefresh(refresh);
-        addRefreshEntity(email, newRefresh, 86400000L);
+        addRefreshEntity(newRefresh, 86400000L);
 
         // 응답 설정
         response.setHeader("access", newAccess);
@@ -90,7 +90,7 @@ public class AuthService {
         return null; // 유효성 검사를 통과한 경우 null 반환
     }
 
-    private void addRefreshEntity(String username, String refresh, Long expiredMs) {
+    private void addRefreshEntity(String refresh, Long expiredMs) {
         Date date = new Date(System.currentTimeMillis() + expiredMs);
 
         RefreshEntity refreshEntity = new RefreshEntity();

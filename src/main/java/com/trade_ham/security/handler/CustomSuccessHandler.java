@@ -42,7 +42,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         //OAuth2User
         CustomOAuth2User customUserDetails = (CustomOAuth2User) authentication.getPrincipal();
 
-        String username = customUserDetails.getUsername();
+        Long id = customUserDetails.getId();
         String email = customUserDetails.getEmail();
 
 
@@ -52,11 +52,11 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         String role = auth.getAuthority();
 
         // 토큰 생성
-        String access = jwtUtil.createJwt("access", username, email, role, accessTokenExpirationTime);
-        String refresh = jwtUtil.createJwt("refresh", username, email, role, refreshTokenExpirationTime);
+        String access = jwtUtil.createJwt("access", id, email, role, accessTokenExpirationTime);
+        String refresh = jwtUtil.createJwt("refresh", id, email, role, refreshTokenExpirationTime);
 
         //Refresh 토큰 저장
-        addRefreshEntity(username, refresh, refreshTokenExpirationTime);
+        addRefreshEntity(id, refresh, refreshTokenExpirationTime);
 
         //응답 설정
         response.setHeader("access", access); // 응답헤더에 엑세스 토큰
@@ -65,7 +65,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         response.sendRedirect("http://localhost:3000/");
     }
 
-    private void addRefreshEntity(String username, String refresh, Long expiredMs) {
+    private void addRefreshEntity(Long id, String refresh, Long expiredMs) {
 
         Date date = new Date(System.currentTimeMillis() + expiredMs);
 
@@ -73,7 +73,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         refreshEntity.setRefresh(refresh);
         refreshEntity.setExpiration(date.toString());
 
-        redisRefreshService.saveRefreshToken(username, refresh, expiredMs);
+        redisRefreshService.saveRefreshToken(id, refresh, expiredMs);
         refreshRepository.save(refreshEntity);
     }
 

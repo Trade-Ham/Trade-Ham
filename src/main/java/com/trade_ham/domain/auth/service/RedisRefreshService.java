@@ -16,9 +16,9 @@ public class RedisRefreshService {
     private final RedisTemplate<String, String> redisTemplate;
 
     // 리프레시 토큰 저장 (TTL 설정)
-    public void saveRefreshToken(String userName, String refreshToken, long expirationTimeInMillis) {
+    public void saveRefreshToken(Long id, String refreshToken, long expirationTimeInMillis) {
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
-        valueOperations.set(userName, refreshToken, expirationTimeInMillis, TimeUnit.MILLISECONDS);
+        valueOperations.set(String.valueOf(id), refreshToken, expirationTimeInMillis, TimeUnit.MILLISECONDS);
     }
 
     public String getRefreshToken(String userName) {
@@ -26,9 +26,9 @@ public class RedisRefreshService {
         return valueOperations.get(userName);
     }
 
-    public void deleteRefreshToken(String userName) {
-        log.info(userName);
-        redisTemplate.delete(userName);
+    public void deleteRefreshToken(Long id) {
+        log.info(String.valueOf(id));
+        redisTemplate.delete(String.valueOf(id));
     }
 
     public boolean hasValidRefreshToken(String userName, String refreshToken) {
