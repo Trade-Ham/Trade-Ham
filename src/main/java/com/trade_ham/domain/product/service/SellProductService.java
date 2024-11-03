@@ -22,16 +22,18 @@ public class SellProductService {
     private final UserRepository userRepository;
 
     // 물품 올리기
-    public ProductResponseDTO createProduct(ProductDTO productDTO, Long sellerId){
+    public ProductResponseDTO createProduct(ProductDTO productDTO, Long sellerId) {
         UserEntity seller = userRepository.findById(sellerId)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND));
 
-        Product product = new Product()
-                .setSeller(seller)
-                .setName(productDTO.getName())
-                .setDescription(productDTO.getDescription())
-                .setStatus(ProductStatus.SELL)
-                .setPrice(productDTO.getPrice());
+
+        Product product = Product.builder()
+                .seller(seller)
+                .name(productDTO.getName())
+                .description(productDTO.getDescription())
+                .status(ProductStatus.SELL)
+                .price(productDTO.getPrice())
+                .build();
 
         seller.addSellingProduct(product);
 
@@ -45,9 +47,7 @@ public class SellProductService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
 
-        product.setName(productDTO.getName())
-                .setDescription(productDTO.getDescription())
-                .setPrice(productDTO.getPrice());
+        product.updateProduct(productDTO.getName(), productDTO.getDescription(), productDTO.getPrice());
 
         Product updatedProduct = productRepository.save(product);
 

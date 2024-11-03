@@ -82,11 +82,12 @@ public class    PurchaseProductService {
         UserEntity buyer = userRepository.findById(buyerId)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND));
 
-        Trade trade = new Trade()
-                .setProduct(product)
-                .setBuyer(buyer)
-                .setSeller(product.getSeller())
-                .setLocker(availableLocker);
+        Trade trade = Trade.builder()
+                .product(product)
+                .buyer(buyer)
+                .seller(product.getSeller())
+                .locker(availableLocker)
+                .build();
 
         buyer.addPurchasedProduct(product);
 
