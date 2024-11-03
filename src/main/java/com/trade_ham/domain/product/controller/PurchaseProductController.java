@@ -36,12 +36,5 @@ public class PurchaseProductController {
         return ApiResponse.success("구매 페이지에 접근 가능합니다.");
     }
 
-    // 구매자의 구매 내역 조회
-    @GetMapping("/products/purchase")
-    public ApiResponse<List<Product>> findProductsByBuyer(@AuthenticationPrincipal CustomOAuth2User oAuth2User) {
-        Long buyerId = oAuth2User.getId();
-        List<Product> products = productService.findProductsByBuyer(buyerId);
 
-        return ApiResponse.success(products);
-    }
 }

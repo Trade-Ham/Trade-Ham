@@ -51,14 +51,6 @@ public class SellProductController {
         return ApiResponse.success(products);
     }
 
-    // 판매자의 판매 내역 조회
-    @GetMapping("/products/sell")
-    public ApiResponse<List<ProductResponseDTO>> findProductsBySeller(@AuthenticationPrincipal CustomOAuth2User oAuth2User) {
-        Long sellerId = oAuth2User.getId();
-        List<ProductResponseDTO> products = sellProductService.findProductsBySeller(sellerId);
-
-        return ApiResponse.success(products);
-    }
 
     // 상태가 SELL인 전체 판매 물품 최신순으로 조회
     @GetMapping("/products")

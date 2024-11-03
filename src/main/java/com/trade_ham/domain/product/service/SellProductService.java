@@ -77,16 +77,7 @@ public class SellProductService {
                 .collect(Collectors.toList());
     }
 
-    // 판매자 판매 내역 관리
-    public List<ProductResponseDTO> findProductsBySeller(Long sellerId) {
-        UserEntity seller = userRepository.findById(sellerId)
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND));
-        List<Product> products = productRepository.findBySeller(seller);
 
-        return products.stream()
-                .map(ProductResponseDTO::new)
-                .collect(Collectors.toList());
-    }
 
     // 상태가 SELL인 전체 판매 물품 최신순 조회
     public List<ProductResponseDTO> findAllSellProducts() {

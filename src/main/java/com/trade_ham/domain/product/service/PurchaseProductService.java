@@ -94,12 +94,7 @@ public class    PurchaseProductService {
         return tradeRepository.save(trade);
     }
 
-    // 구매자 구매 내역 관리
-    public List<Product> findProductsByBuyer(Long buyerId) {
-        UserEntity buyer = userRepository.findById(buyerId)
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND));
-        return productRepository.findByBuyer(buyer);
-    }
+
 
     public Product findProductById(Long productId) {
         return productRepository.findById(productId)
