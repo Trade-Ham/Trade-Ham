@@ -1,7 +1,6 @@
 package com.trade_ham.domain.product.controller;
 
 import com.trade_ham.domain.auth.dto.CustomOAuth2User;
-import com.trade_ham.domain.auth.dto.OAuth2Response;
 import com.trade_ham.domain.product.dto.ProductDTO;
 import com.trade_ham.domain.product.dto.ProductResponseDTO;
 import com.trade_ham.domain.product.service.SellProductService;
@@ -14,12 +13,12 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/product")
 public class SellProductController {
     private final SellProductService sellProductService;
 
     // 물품 올리기
-    @PostMapping("/product/sell")
+    @PostMapping("/sell")
     public ApiResponse<ProductResponseDTO> createProduct(@RequestBody ProductDTO productDTO, @AuthenticationPrincipal CustomOAuth2User oAuth2User) {
         Long sellerId = oAuth2User.getId();
         ProductResponseDTO product = sellProductService.createProduct(productDTO, sellerId);
@@ -28,7 +27,7 @@ public class SellProductController {
     }
 
     // 물품 수정
-    @PutMapping("/product/{productId}")
+    @PutMapping("/{productId}")
     public ApiResponse<ProductResponseDTO> updateProduct(@PathVariable Long productId, @RequestBody ProductDTO productDTO) {
         ProductResponseDTO updatedProduct = sellProductService.updateProduct(productId, productDTO);
 
@@ -36,7 +35,7 @@ public class SellProductController {
     }
 
     // 물품 삭제
-    @DeleteMapping("/product/{productId}")
+    @DeleteMapping("/{productId}")
     public ApiResponse<String> deleteProduct(@PathVariable Long productId) {
         sellProductService.deleteProduct(productId);
 
@@ -44,7 +43,7 @@ public class SellProductController {
     }
 
     // 물품 검색
-    @GetMapping("/product/search")
+    @GetMapping("/search")
     public ApiResponse<List<ProductResponseDTO>> searchProducts(@RequestParam String keyword) {
         List<ProductResponseDTO> products = sellProductService.searchProducts(keyword);
 
@@ -53,7 +52,7 @@ public class SellProductController {
 
 
     // 상태가 SELL인 전체 판매 물품 최신순으로 조회
-    @GetMapping("/products")
+    @GetMapping("/all")
     public ApiResponse<List<ProductResponseDTO>> findAllSellProducts() {
         List<ProductResponseDTO> products = sellProductService.findAllSellProducts();
 
