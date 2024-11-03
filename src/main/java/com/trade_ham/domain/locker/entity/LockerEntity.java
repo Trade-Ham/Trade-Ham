@@ -1,4 +1,4 @@
-package com.trade_ham.domain.locker.domain;
+package com.trade_ham.domain.locker.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;

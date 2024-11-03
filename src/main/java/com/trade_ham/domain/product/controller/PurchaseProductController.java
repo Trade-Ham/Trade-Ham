@@ -1,7 +1,7 @@
 package com.trade_ham.domain.product.controller;
 
-import com.trade_ham.domain.product.domain.ProductEntity;
-import com.trade_ham.domain.product.domain.ProductStatus;
+import com.trade_ham.domain.product.entity.ProductEntity;
+import com.trade_ham.domain.product.entity.ProductStatus;
 import com.trade_ham.domain.product.service.PurchaseProductService;
 import com.trade_ham.global.common.exception.AccessDeniedException;
 import com.trade_ham.global.common.exception.ErrorCode;

@@ -2,11 +2,11 @@ package com.trade_ham.domain.product.service;
 
 import com.trade_ham.domain.auth.entity.UserEntity;
 import com.trade_ham.domain.auth.repository.UserRepository;
-import com.trade_ham.domain.locker.domain.LockerEntity;
+import com.trade_ham.domain.locker.entity.LockerEntity;
 import com.trade_ham.domain.locker.repository.LockerRepository;
-import com.trade_ham.domain.product.domain.ProductEntity;
-import com.trade_ham.domain.product.domain.ProductStatus;
-import com.trade_ham.domain.product.domain.TradeEntity;
+import com.trade_ham.domain.product.entity.ProductEntity;
+import com.trade_ham.domain.product.entity.ProductStatus;
+import com.trade_ham.domain.product.entity.TradeEntity;
 import com.trade_ham.domain.product.repository.ProductRepository;
 import com.trade_ham.domain.product.repository.TradeRepository;
 import com.trade_ham.global.common.exception.AccessDeniedException;

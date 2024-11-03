@@ -1,7 +1,7 @@
-package com.trade_ham.domain.product.domain;
+package com.trade_ham.domain.product.entity;
 
 import com.trade_ham.domain.auth.entity.UserEntity;
-import com.trade_ham.domain.locker.domain.LockerEntity;
+import com.trade_ham.domain.locker.entity.LockerEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

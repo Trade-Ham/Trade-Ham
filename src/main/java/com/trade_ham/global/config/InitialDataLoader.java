@@ -1,6 +1,6 @@
 package com.trade_ham.global.config;
 
-import com.trade_ham.domain.locker.domain.LockerEntity;
+import com.trade_ham.domain.locker.entity.LockerEntity;
 import com.trade_ham.domain.locker.repository.LockerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;

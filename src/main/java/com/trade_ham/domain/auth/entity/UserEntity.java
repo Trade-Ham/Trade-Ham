@@ -1,6 +1,6 @@
 package com.trade_ham.domain.auth.entity;
 
-import com.trade_ham.domain.product.domain.ProductEntity;
+import com.trade_ham.domain.product.entity.ProductEntity;
 import com.trade_ham.global.common.enums.Provider;
 import com.trade_ham.global.common.enums.Role;
 import jakarta.persistence.*;

@@ -1,7 +1,7 @@
 package com.trade_ham.domain.product.dto;
 
-import com.trade_ham.domain.product.domain.ProductEntity;
-import com.trade_ham.domain.product.domain.ProductStatus;
+import com.trade_ham.domain.product.entity.ProductEntity;
+import com.trade_ham.domain.product.entity.ProductStatus;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

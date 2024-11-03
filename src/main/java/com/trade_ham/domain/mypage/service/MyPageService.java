@@ -3,7 +3,7 @@ package com.trade_ham.domain.mypage.service;
 
 import com.trade_ham.domain.auth.entity.UserEntity;
 import com.trade_ham.domain.auth.repository.UserRepository;
-import com.trade_ham.domain.product.domain.ProductEntity;
+import com.trade_ham.domain.product.entity.ProductEntity;
 import com.trade_ham.domain.product.dto.ProductResponseDTO;
 import com.trade_ham.domain.product.repository.ProductRepository;
 import com.trade_ham.global.common.exception.ErrorCode;

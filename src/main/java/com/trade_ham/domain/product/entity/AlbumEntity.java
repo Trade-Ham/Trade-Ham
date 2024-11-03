@@ -1,4 +1,4 @@
-package com.trade_ham.domain.product.domain;
+package com.trade_ham.domain.product.entity;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;

@@ -1,8 +1,8 @@
 package com.trade_ham.domain.product.repository;
 
 import com.trade_ham.domain.auth.entity.UserEntity;
-import com.trade_ham.domain.product.domain.ProductEntity;
-import com.trade_ham.domain.product.domain.ProductStatus;
+import com.trade_ham.domain.product.entity.ProductEntity;
+import com.trade_ham.domain.product.entity.ProductStatus;
 import io.lettuce.core.dynamic.annotation.Param;
 import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
