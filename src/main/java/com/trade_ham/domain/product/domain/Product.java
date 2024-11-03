@@ -31,9 +31,9 @@ public class Product {
     @Column(nullable = false)
     private String description;
 
-    @Getter
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @Setter
     private ProductStatus status;
 
     @Column(nullable = false)

@@ -2,6 +2,7 @@ package com.trade_ham.domain.locker.controller;
 
 import com.trade_ham.domain.locker.domain.Locker;
 import com.trade_ham.domain.locker.repository.LockerRepository;
+import com.trade_ham.global.common.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +19,7 @@ public class LockerController {
 
 
     @GetMapping
-    public List<Locker> getAllLockers() {
-        return lockerRepository.findAll();
+    public ApiResponse<List<Locker>> getAllLockers() {
+        return ApiResponse.success(lockerRepository.findAll());
     }
 }
