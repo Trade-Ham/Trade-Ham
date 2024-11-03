@@ -1,10 +1,6 @@
 package com.trade_ham.domain.product.entity;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
-import java.time.LocalDateTime;
 
 @Entity
 public class AlbumEntity {
@@ -16,11 +12,5 @@ public class AlbumEntity {
     private ProductEntity productEntity;
     private String imageUrl;
     private Double fileSize;
-    @CreationTimestamp
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
 
-    @UpdateTimestamp
-    @Column(nullable = false)
-    private LocalDateTime updatedAt;
 }
