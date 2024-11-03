@@ -8,7 +8,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Locker {
+public class LockerEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +25,7 @@ public class Locker {
     @Column(name = "locker_status", nullable = false)
     private Boolean lockerStatus;
 
-    public Locker(String lockerNumber, String lockerPassword, Boolean lockerStatus) {
+    public LockerEntity(String lockerNumber, String lockerPassword, Boolean lockerStatus) {
         this.lockerNumber = lockerNumber;
         this.lockerPassword = lockerPassword;
         this.lockerStatus = lockerStatus;

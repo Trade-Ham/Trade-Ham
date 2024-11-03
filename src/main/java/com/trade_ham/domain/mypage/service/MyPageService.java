@@ -3,7 +3,7 @@ package com.trade_ham.domain.mypage.service;
 
 import com.trade_ham.domain.auth.entity.UserEntity;
 import com.trade_ham.domain.auth.repository.UserRepository;
-import com.trade_ham.domain.product.domain.Product;
+import com.trade_ham.domain.product.domain.ProductEntity;
 import com.trade_ham.domain.product.dto.ProductResponseDTO;
 import com.trade_ham.domain.product.repository.ProductRepository;
 import com.trade_ham.global.common.exception.ErrorCode;
@@ -22,7 +22,7 @@ public class MyPageService {
     private final ProductRepository productRepository;
 
     // 구매자 구매 내역 관리
-    public List<Product> findProductsByBuyer(Long buyerId) {
+    public List<ProductEntity> findProductsByBuyer(Long buyerId) {
         UserEntity buyer = userRepository.findById(buyerId)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND));
         return productRepository.findByBuyer(buyer);
@@ -32,9 +32,9 @@ public class MyPageService {
     public List<ProductResponseDTO> findProductsBySeller(Long sellerId) {
         UserEntity seller = userRepository.findById(sellerId)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND));
-        List<Product> products = productRepository.findBySeller(seller);
+        List<ProductEntity> productEntities = productRepository.findBySeller(seller);
 
-        return products.stream()
+        return productEntities.stream()
                 .map(ProductResponseDTO::new)
                 .collect(Collectors.toList());
     }

@@ -2,7 +2,7 @@ package com.trade_ham.domain.mypage.controller;
 
 import com.trade_ham.domain.auth.dto.CustomOAuth2User;
 import com.trade_ham.domain.mypage.service.MyPageService;
-import com.trade_ham.domain.product.domain.Product;
+import com.trade_ham.domain.product.domain.ProductEntity;
 import com.trade_ham.domain.product.dto.ProductResponseDTO;
 import com.trade_ham.global.common.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -32,10 +32,10 @@ public class MyPageController {
 
     // 구매자의 구매 내역 조회
     @GetMapping("purchase")
-    public ApiResponse<List<Product>> findProductsByBuyer(@AuthenticationPrincipal CustomOAuth2User oAuth2User) {
+    public ApiResponse<List<ProductEntity>> findProductsByBuyer(@AuthenticationPrincipal CustomOAuth2User oAuth2User) {
         Long buyerId = oAuth2User.getId();
-        List<Product> products = myPageService.findProductsByBuyer(buyerId);
+        List<ProductEntity> productEntities = myPageService.findProductsByBuyer(buyerId);
 
-        return ApiResponse.success(products);
+        return ApiResponse.success(productEntities);
     }
 }

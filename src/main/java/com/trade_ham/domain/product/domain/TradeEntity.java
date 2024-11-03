@@ -1,7 +1,7 @@
 package com.trade_ham.domain.product.domain;
 
 import com.trade_ham.domain.auth.entity.UserEntity;
-import com.trade_ham.domain.locker.domain.Locker;
+import com.trade_ham.domain.locker.domain.LockerEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Trade {
+public class TradeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long tradeId;
@@ -29,11 +29,11 @@ public class Trade {
     private UserEntity seller;
     @ManyToOne
     @JoinColumn(name = "locker_id")
-    private Locker locker;
+    private LockerEntity lockerEntity;
 
     @ManyToOne
     @JoinColumn(name = "product_id")
-    private Product product;
+    private ProductEntity productEntity;
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;

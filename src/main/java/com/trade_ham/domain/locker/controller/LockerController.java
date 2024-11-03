@@ -1,6 +1,6 @@
 package com.trade_ham.domain.locker.controller;
 
-import com.trade_ham.domain.locker.domain.Locker;
+import com.trade_ham.domain.locker.domain.LockerEntity;
 import com.trade_ham.domain.locker.repository.LockerRepository;
 import com.trade_ham.global.common.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ public class LockerController {
 
 
     @GetMapping
-    public ApiResponse<List<Locker>> getAllLockers() {
+    public ApiResponse<List<LockerEntity>> getAllLockers() {
         return ApiResponse.success(lockerRepository.findAll());
     }
 }

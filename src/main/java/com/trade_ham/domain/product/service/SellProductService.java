@@ -2,7 +2,7 @@ package com.trade_ham.domain.product.service;
 
 import com.trade_ham.domain.auth.entity.UserEntity;
 import com.trade_ham.domain.auth.repository.UserRepository;
-import com.trade_ham.domain.product.domain.Product;
+import com.trade_ham.domain.product.domain.ProductEntity;
 import com.trade_ham.domain.product.domain.ProductStatus;
 import com.trade_ham.domain.product.dto.ProductDTO;
 import com.trade_ham.domain.product.dto.ProductResponseDTO;
@@ -27,7 +27,7 @@ public class SellProductService {
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND));
 
 
-        Product product = Product.builder()
+        ProductEntity productEntity = ProductEntity.builder()
                 .seller(seller)
                 .name(productDTO.getName())
                 .description(productDTO.getDescription())
@@ -35,44 +35,44 @@ public class SellProductService {
                 .price(productDTO.getPrice())
                 .build();
 
-        seller.addSellingProduct(product);
+        seller.addSellingProduct(productEntity);
 
-        Product savedProduct = productRepository.save(product);
+        ProductEntity savedProductEntity = productRepository.save(productEntity);
 
-        return new ProductResponseDTO(savedProduct);
+        return new ProductResponseDTO(savedProductEntity);
     }
 
     // 물품 수정
     public ProductResponseDTO updateProduct(Long productId, ProductDTO productDTO) {
-        Product product = productRepository.findById(productId)
+        ProductEntity productEntity = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
 
-        product.updateProduct(productDTO.getName(), productDTO.getDescription(), productDTO.getPrice());
+        productEntity.updateProduct(productDTO.getName(), productDTO.getDescription(), productDTO.getPrice());
 
-        Product updatedProduct = productRepository.save(product);
+        ProductEntity updatedProductEntity = productRepository.save(productEntity);
 
-        return new ProductResponseDTO(updatedProduct);
+        return new ProductResponseDTO(updatedProductEntity);
     }
 
     // 물품 삭제
     public void deleteProduct(Long productId) {
-        Product product = productRepository.findById(productId)
+        ProductEntity productEntity = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
 
         // 판매자 판매 내역에서 해당 상품 제거
-        UserEntity seller = product.getSeller();
+        UserEntity seller = productEntity.getSeller();
         if (seller != null) {
-            seller.deleteSellingProduct(product);
+            seller.deleteSellingProduct(productEntity);
         }
 
-        productRepository.delete(product);
+        productRepository.delete(productEntity);
     }
 
     // 물품 검색 (이름을 기반으로 검색)
     public List<ProductResponseDTO> searchProducts(String keyword) {
-        List<Product> products = productRepository.findByNameContainingIgnoreCase(keyword);
+        List<ProductEntity> productEntities = productRepository.findByNameContainingIgnoreCase(keyword);
 
-        return products.stream()
+        return productEntities.stream()
                 .map(ProductResponseDTO::new)
                 .collect(Collectors.toList());
     }
@@ -81,9 +81,9 @@ public class SellProductService {
 
     // 상태가 SELL인 전체 판매 물품 최신순 조회
     public List<ProductResponseDTO> findAllSellProducts() {
-        List<Product> products = productRepository.findByStatusOrderByCreatedAtDesc(ProductStatus.SELL);
+        List<ProductEntity> productEntities = productRepository.findByStatusOrderByCreatedAtDesc(ProductStatus.SELL);
 
-        return products.stream()
+        return productEntities.stream()
                 .map(ProductResponseDTO::new)
                 .collect(Collectors.toList());
     }

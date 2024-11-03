@@ -1,7 +1,7 @@
 package com.trade_ham.domain.product.domain;
 
 import com.trade_ham.domain.auth.entity.UserEntity;
-import com.trade_ham.domain.locker.domain.Locker;
+import com.trade_ham.domain.locker.domain.LockerEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Product {
+public class ProductEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long productId;
@@ -42,7 +42,7 @@ public class Product {
     @Setter
     @OneToOne
     @JoinColumn(name = "locker_id")
-    private Locker locker;
+    private LockerEntity lockerEntity;
 
 
     @CreationTimestamp

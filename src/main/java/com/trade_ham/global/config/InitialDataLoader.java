@@ -1,6 +1,6 @@
 package com.trade_ham.global.config;
 
-import com.trade_ham.domain.locker.domain.Locker;
+import com.trade_ham.domain.locker.domain.LockerEntity;
 import com.trade_ham.domain.locker.repository.LockerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
@@ -14,8 +14,8 @@ public class InitialDataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        lockerRepository.save(new Locker("1", "1234", false));
-        lockerRepository.save(new Locker("2", "1234", false));
-        lockerRepository.save(new Locker("3", "1234", false));
+        lockerRepository.save(new LockerEntity("1", "1234", false));
+        lockerRepository.save(new LockerEntity("2", "1234", false));
+        lockerRepository.save(new LockerEntity("3", "1234", false));
     }
 }

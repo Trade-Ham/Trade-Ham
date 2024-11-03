@@ -2,11 +2,11 @@ package com.trade_ham.domain.product.service;
 
 import com.trade_ham.domain.auth.entity.UserEntity;
 import com.trade_ham.domain.auth.repository.UserRepository;
-import com.trade_ham.domain.locker.domain.Locker;
+import com.trade_ham.domain.locker.domain.LockerEntity;
 import com.trade_ham.domain.locker.repository.LockerRepository;
-import com.trade_ham.domain.product.domain.Product;
+import com.trade_ham.domain.product.domain.ProductEntity;
 import com.trade_ham.domain.product.domain.ProductStatus;
-import com.trade_ham.domain.product.domain.Trade;
+import com.trade_ham.domain.product.domain.TradeEntity;
 import com.trade_ham.domain.product.repository.ProductRepository;
 import com.trade_ham.domain.product.repository.TradeRepository;
 import com.trade_ham.global.common.exception.AccessDeniedException;
@@ -16,8 +16,6 @@ import com.trade_ham.global.common.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -33,20 +31,20 @@ public class    PurchaseProductService {
     -> 물품 상태 변경
      */
     @Transactional
-    public Product purchaseProduct(Long productId) {
+    public ProductEntity purchaseProduct(Long productId) {
         // 동시성을 고려해 비관적 락을 사용
-        Product product = productRepository.findByIdWithPessimisticLock(productId)
+        ProductEntity productEntity = productRepository.findByIdWithPessimisticLock(productId)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
 
-        if (!product.getStatus().equals(ProductStatus.SELL)) {
+        if (!productEntity.getStatus().equals(ProductStatus.SELL)) {
             throw new AccessDeniedException(ErrorCode.ACCESS_DENIED);
         }
 
-        // Product 상태를 'CHECK'로 변경
-        product.setStatus(ProductStatus.CHECK);
-        productRepository.save(product);
+        // ProductEntity 상태를 'CHECK'로 변경
+        productEntity.setStatus(ProductStatus.CHECK);
+        productRepository.save(productEntity);
 
-        return product;
+        return productEntity;
     }
 
     /*
@@ -57,46 +55,46 @@ public class    PurchaseProductService {
      거래 내역 생성
      */
     @Transactional
-    public Trade completePurchase(Long productId, Long buyerId) {
-        Product product = productRepository.findById(productId)
+    public TradeEntity completePurchase(Long productId, Long buyerId) {
+        ProductEntity productEntity = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
 
-        if (!product.getStatus().equals(ProductStatus.CHECK)) {
+        if (!productEntity.getStatus().equals(ProductStatus.CHECK)) {
             throw new InvalidProductStateException(ErrorCode.INVALID_PRODUCT_STATE);
         }
 
         // 상태를 WAIT으로 변경
-        product.setStatus(ProductStatus.WAIT);
+        productEntity.setStatus(ProductStatus.WAIT);
 
         // 사용 가능한 사물함 할당
-        Locker availableLocker = lockerRepository.findFirstByLockerStatusTrue()
+        LockerEntity availableLockerEntity = lockerRepository.findFirstByLockerStatusTrue()
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.LOCKER_NOT_AVAILABLE));
 
-        availableLocker.setLockerStatus(false);
-        lockerRepository.save(availableLocker);
+        availableLockerEntity.setLockerStatus(false);
+        lockerRepository.save(availableLockerEntity);
 
-        product.setLocker(availableLocker);
-        productRepository.save(product);
+        productEntity.setLockerEntity(availableLockerEntity);
+        productRepository.save(productEntity);
 
         // 거래 내역 생성
         UserEntity buyer = userRepository.findById(buyerId)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND));
 
-        Trade trade = Trade.builder()
-                .product(product)
+        TradeEntity tradeEntity = TradeEntity.builder()
+                .productEntity(productEntity)
                 .buyer(buyer)
-                .seller(product.getSeller())
-                .locker(availableLocker)
+                .seller(productEntity.getSeller())
+                .lockerEntity(availableLockerEntity)
                 .build();
 
-        buyer.addPurchasedProduct(product);
+        buyer.addPurchasedProduct(productEntity);
 
-        return tradeRepository.save(trade);
+        return tradeRepository.save(tradeEntity);
     }
 
 
 
-    public Product findProductById(Long productId) {
+    public ProductEntity findProductById(Long productId) {
         return productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
     }

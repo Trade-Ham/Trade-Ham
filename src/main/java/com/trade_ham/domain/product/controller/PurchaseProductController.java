@@ -1,7 +1,6 @@
 package com.trade_ham.domain.product.controller;
 
-import com.trade_ham.domain.auth.repository.UserRepository;
-import com.trade_ham.domain.product.domain.Product;
+import com.trade_ham.domain.product.domain.ProductEntity;
 import com.trade_ham.domain.product.domain.ProductStatus;
 import com.trade_ham.domain.product.service.PurchaseProductService;
 import com.trade_ham.global.common.exception.AccessDeniedException;
@@ -19,10 +18,10 @@ public class PurchaseProductController {
 
     @GetMapping("/product/purchase-page/{productId}")
     public ApiResponse<String> accessPurchasePage(@PathVariable Long productId) {
-        Product product = productService.findProductById(productId);
+        ProductEntity productEntity = productService.findProductById(productId);
 
         // 상태가 SELL이 아니라면 예외 발생
-        if (!product.getStatus().equals(ProductStatus.SELL)) {
+        if (!productEntity.getStatus().equals(ProductStatus.SELL)) {
             throw new AccessDeniedException(ErrorCode.ACCESS_DENIED);
         }
 

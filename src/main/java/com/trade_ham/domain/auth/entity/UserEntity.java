@@ -1,16 +1,12 @@
 package com.trade_ham.domain.auth.entity;
 
-import com.trade_ham.domain.product.domain.Product;
+import com.trade_ham.domain.product.domain.ProductEntity;
 import com.trade_ham.global.common.enums.Provider;
 import com.trade_ham.global.common.enums.Role;
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,10 +30,10 @@ public class UserEntity {
     @Enumerated(EnumType.STRING)
     private Provider provider; // KAKAO, NAVER
     @OneToMany(mappedBy = "seller")
-    private List<Product> sellingProducts = new ArrayList<>();
+    private List<ProductEntity> sellingProductEntities = new ArrayList<>();
 
     @OneToMany(mappedBy = "buyer")
-    private List<Product> purchasedProducts = new ArrayList<>();
+    private List<ProductEntity> purchasedProductEntities = new ArrayList<>();
 
     // 추후 따로 받는다.
     private String acount; // 계좌번호
@@ -47,15 +43,15 @@ public class UserEntity {
         this.nickname = nickname;
     }
 
-    public void addSellingProduct(Product product) {
-        this.sellingProducts.add(product);
+    public void addSellingProduct(ProductEntity productEntity) {
+        this.sellingProductEntities.add(productEntity);
     }
 
-    public void addPurchasedProduct(Product product) {
-        this.purchasedProducts.add(product);
+    public void addPurchasedProduct(ProductEntity productEntity) {
+        this.purchasedProductEntities.add(productEntity);
     }
 
-    public void deleteSellingProduct(Product product) {
-        this.sellingProducts.remove(product);
+    public void deleteSellingProduct(ProductEntity productEntity) {
+        this.sellingProductEntities.remove(productEntity);
     }
 }
