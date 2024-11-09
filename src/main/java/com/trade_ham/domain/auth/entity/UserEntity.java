@@ -36,10 +36,11 @@ public class UserEntity {
     private List<ProductEntity> purchasedProductEntities = new ArrayList<>();
 
     // 추후 따로 받는다.
-    private String acount; // 계좌번호
+    private String account; // 계좌번호
     private String realname; // 실제이름
 
-    public void updateNickname(String nickname) {
+    public void updateAccountAndNickname(String account, String nickname) {
+        this.account = account;
         this.nickname = nickname;
     }
 

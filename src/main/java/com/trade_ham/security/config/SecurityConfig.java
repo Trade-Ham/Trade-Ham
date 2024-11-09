@@ -74,13 +74,13 @@ public class SecurityConfig {
         // 세션 설정: STATELESS
         http.sessionManagement(session -> session.sessionCreationPolicy(STATELESS));
 
-        // 경로별 인가 작업
-        http.securityMatcher("/**") // 모든 요청에 대해
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(WHITE_LIST_URL).permitAll()
-                        .anyRequest().authenticated()
-                );
-        return http.build();
+            // 경로별 인가 작업
+            http.securityMatcher("/**") // 모든 요청에 대해
+                    .authorizeHttpRequests(auth -> auth
+                            .requestMatchers(WHITE_LIST_URL).permitAll()
+                            .anyRequest().authenticated()
+                    );
+            return http.build();
     }
 
     private static final String[] WHITE_LIST_URL = {

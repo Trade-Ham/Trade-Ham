@@ -2,6 +2,7 @@ package com.trade_ham.domain.product.entity;
 
 import com.trade_ham.domain.auth.entity.UserEntity;
 import com.trade_ham.domain.locker.entity.LockerEntity;
+import com.trade_ham.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,10 +11,11 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductEntity {
+public class ProductEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long productId;
+
     @ManyToOne
     @JoinColumn(name = "seller_id")
     private UserEntity seller;

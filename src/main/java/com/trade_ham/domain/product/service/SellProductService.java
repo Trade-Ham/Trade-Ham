@@ -7,6 +7,7 @@ import com.trade_ham.domain.product.entity.ProductStatus;
 import com.trade_ham.domain.product.dto.ProductDTO;
 import com.trade_ham.domain.product.dto.ProductResponseDTO;
 import com.trade_ham.domain.product.repository.ProductRepository;
+import com.trade_ham.global.common.exception.AccessDeniedException;
 import com.trade_ham.global.common.exception.ErrorCode;
 import com.trade_ham.global.common.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,14 @@ public class SellProductService {
         UserEntity seller = userRepository.findById(sellerId)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND));
 
+        //계좌번호 null인지 확인
+        if (seller.getAccount() == null) {
+            throw new ResourceNotFoundException(ErrorCode.ACCOUNT_NOT_FOUND);
+        }
+
+        if (seller.getRealname() == null) {
+            throw new ResourceNotFoundException(ErrorCode.REALNAME_NOT_FOUND);
+        }
 
         ProductEntity productEntity = ProductEntity.builder()
                 .seller(seller)
@@ -77,7 +86,6 @@ public class SellProductService {
                 .map(ProductResponseDTO::new)
                 .collect(Collectors.toList());
     }
-
 
 
     // 상태가 SELL인 전체 판매 물품 최신순 조회

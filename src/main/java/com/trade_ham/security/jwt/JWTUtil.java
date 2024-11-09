@@ -49,6 +49,7 @@ public class JWTUtil {
                 .claim("category", category)
                 .claim("id", id)
                 .claim("email", email)
+                .claim("role", role)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expiredMs))
                 .signWith(secretKey)

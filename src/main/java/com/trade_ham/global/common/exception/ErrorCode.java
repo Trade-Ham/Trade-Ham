@@ -19,6 +19,8 @@ public enum ErrorCode {
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USER_NOT_FOUND", "사용자를 찾을 수 없습니다."),
     PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "PRODUCT_NOT_FOUND", "상품을 찾을 수 없습니다."),
     LOCKER_NOT_AVAILABLE(HttpStatus.NOT_FOUND, "LOCKER_NOT_AVAILABLE", "사용 가능한 사물함이 없습니다."),
+    ACCOUNT_NOT_FOUND(HttpStatus.NOT_FOUND, "ACCOUNT_NOT_FOUND", "계좌번호을 찾을 수 없습니다."),
+    REALNAME_NOT_FOUND(HttpStatus.NOT_FOUND, "REALNAME_NOT_FOUND", "실제이름을 찾을 수 없습니다."),
 
     // 409 Conflict
     INVALID_PRODUCT_STATE(HttpStatus.CONFLICT, "INVALID_PRODUCT_STATE", "상품 상태가 올바르지 않습니다."),
