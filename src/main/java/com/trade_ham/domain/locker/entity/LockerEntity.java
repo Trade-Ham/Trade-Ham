@@ -18,6 +18,7 @@ public class LockerEntity {
     @Column(name = "locker_number", nullable = false, length = 50)
     private String lockerNumber;
 
+    @Setter
     @Column(name = "locker_password", length = 50)
     private String lockerPassword;
 
