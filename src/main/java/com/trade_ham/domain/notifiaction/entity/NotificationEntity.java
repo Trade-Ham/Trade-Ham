@@ -13,14 +13,16 @@ public class NotificationEntity {
     @ManyToOne
     private UserEntity user;
 
+    private String message;
     private String lockerId;
     private String lockerPassword;
 
     @Setter
     private boolean isRead;
 
-    private NotificationEntity(UserEntity user, String lockerId, String lockerPassword) {
+    private NotificationEntity(UserEntity user, String message, String lockerId, String lockerPassword) {
         this.user = user;
+        this.message = message;
         this.lockerId = lockerId;
         this.lockerPassword = lockerPassword;
         this.isRead = true;
@@ -30,7 +32,7 @@ public class NotificationEntity {
 
     }
 
-    public static NotificationEntity createNotification(UserEntity user, String lockerId, String lockerPassword) {
-        return new NotificationEntity(user, lockerId, lockerPassword);
+    public static NotificationEntity createNotification(UserEntity user, String message, String lockerId, String lockerPassword) {
+        return new NotificationEntity(user, message, lockerId, lockerPassword);
     }
 }

@@ -78,14 +78,15 @@ public class PurchaseProductService {
         TradeEntity tradeEntity = createTradeHistory(buyerId, productEntity, availableLockerEntity);
 
         // 판매자에게 사물함 ID와 비밀번호를 전달
-        sendLockerInfoToSeller(productEntity.getSeller(), availableLockerEntity);
+        sendLockerInfoToUser(productEntity.getSeller(), "사물함이 할당되었습니다.", availableLockerEntity);
 
         return tradeRepository.save(tradeEntity);
     }
 
-    private void sendLockerInfoToSeller(UserEntity seller, LockerEntity availableLockerEntity) {
+    private void sendLockerInfoToUser(UserEntity user, String message, LockerEntity availableLockerEntity) {
         NotificationEntity notification = NotificationEntity.createNotification(
-                seller,
+                user,
+                message,
                 availableLockerEntity.getLockerNumber(),
                 availableLockerEntity.getLockerPassword());
         notificationRepository.save(notification);
@@ -129,5 +130,46 @@ public class PurchaseProductService {
     public ProductEntity findProductById(Long productId) {
         return productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
+    }
+
+    /*
+     구매자 수령전 알림
+     구매자에게 사물함 아이디와 비밀번호 전달
+     */
+    @Transactional
+    public void storeInLocker(Long productId) {
+        TradeEntity tradeEntity = tradeRepository.findByProductEntityId(productId)
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.TRADE_NOT_FOUND));
+
+        UserEntity buyer = tradeEntity.getBuyer();
+        LockerEntity lockerEntity = tradeEntity.getLockerEntity();
+
+        sendLockerInfoToUser(buyer, "구매하신 상품이 사물함에 보관되었습니다.", lockerEntity);
+    }
+
+    /*
+     구매자 수령 완료
+     물품 상태 변경
+     물품에 사물함을 할당하고 사물함 상태 변경
+     */
+    @Transactional
+    public void markAsReceived(Long productId) {
+        ProductEntity productEntity = productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
+
+        if (!productEntity.getStatus().equals(ProductStatus.WAIT)) {
+            throw new InvalidProductStateException(ErrorCode.INVALID_PRODUCT_STATE);
+        }
+
+        // 상태를 DONE으로 변경
+        productEntity.setStatus(ProductStatus.DONE);
+        productRepository.save(productEntity);
+
+        //사물함 상태 변경
+        TradeEntity tradeEntity = tradeRepository.findByProductEntityId(productId)
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.TRADE_NOT_FOUND));
+        LockerEntity lockerEntity = tradeEntity.getLockerEntity();
+        lockerEntity.setLockerStatus(true);
+        lockerRepository.save(lockerEntity);
     }
 }

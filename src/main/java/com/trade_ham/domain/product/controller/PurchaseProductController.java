@@ -24,11 +24,24 @@ public class PurchaseProductController {
         return ApiResponse.success("구매 페이지에 접근 가능합니다.");
     }
 
-    @GetMapping("/purchase/{product_id}")
+    @PostMapping("/purchase/{product_id}")
     public ApiResponse<String> completePurchase(@PathVariable Long product_id, @AuthenticationPrincipal CustomOAuth2User oAuth2User) {
         Long buyerId = oAuth2User.getId();
         productService.completePurchase(product_id, buyerId);
         return ApiResponse.success("구매를 완료하였습니다.");
     }
+
+    @PostMapping("/locker-in/{product_id}")
+    public ApiResponse<String> storeInLocker(@PathVariable Long product_id) {
+        productService.storeInLocker(product_id);
+        return ApiResponse.success("물건을 사물함에 넣었습니다.");
+    }
+
+    @PostMapping("/take-out/{product_id}")
+    public ApiResponse<String> markAsReceived(@PathVariable Long product_id) {
+        productService.markAsReceived(product_id);
+        return ApiResponse.success("물건을 수령하였습니다.");
+    }
+
 
 }
