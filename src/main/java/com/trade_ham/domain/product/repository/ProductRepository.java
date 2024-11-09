@@ -18,6 +18,8 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
     List<ProductEntity> findBySeller(UserEntity seller);
     List<ProductEntity> findByBuyer(UserEntity buyer);
     List<ProductEntity> findByStatusOrderByCreatedAtDesc(ProductStatus status);
+    @Query("SELECT p FROM ProductEntity p WHERE p.status = ProductStatus.SELL AND p.name LIKE %:keyword%")
+    List<ProductEntity> findByKeywordContainingAndStatusIsSell(@Param("keyword") String keyword);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT p FROM ProductEntity p WHERE p.productId = :productId")

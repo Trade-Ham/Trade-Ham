@@ -3,4 +3,8 @@ package com.trade_ham.domain.product.repository;
 import com.trade_ham.domain.product.entity.TradeEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface TradeRepository extends JpaRepository<TradeEntity, Long> {}
+import java.util.Optional;
+
+public interface TradeRepository extends JpaRepository<TradeEntity, Long> {
+    Optional<TradeEntity> findByProductEntityId(Long productId);
+}
