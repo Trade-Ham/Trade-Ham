@@ -68,16 +68,6 @@ public class SellProductService {
         productRepository.delete(productEntity);
     }
 
-    // 물품 검색 (이름을 기반으로 검색)
-    // N+1 문제 발생 예상 지역
-    public List<ProductResponseDTO> searchProducts(String keyword) {
-        List<ProductEntity> productEntities = productRepository.findByNameContainingIgnoreCase(keyword);
-
-        return productEntities.stream()
-                .map(ProductResponseDTO::new)
-                .collect(Collectors.toList());
-    }
-
 
 
     // 상태가 SELL인 전체 판매 물품 최신순 조회

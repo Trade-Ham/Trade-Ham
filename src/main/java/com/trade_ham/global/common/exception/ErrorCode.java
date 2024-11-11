@@ -24,7 +24,8 @@ public enum ErrorCode {
     INVALID_PRODUCT_STATE(HttpStatus.CONFLICT, "INVALID_PRODUCT_STATE", "상품 상태가 올바르지 않습니다."),
 
     // 500 Internal Server Error
-    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_SERVER_ERROR", "서버 에러가 발생했습니다.");
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_SERVER_ERROR", "서버 에러가 발생했습니다."),
+    NOTIFICATION_CREATION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "NOTIFICATION_CREATION_ERROR", "알림 생성에 실패했습니다.");
 
     private final HttpStatus status;
     private final String code;

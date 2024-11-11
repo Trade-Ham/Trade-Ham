@@ -42,13 +42,7 @@ public class SellProductController {
         return ApiResponse.success("삭제 완료");
     }
 
-    // 물품 검색
-    @GetMapping("/search")
-    public ApiResponse<List<ProductResponseDTO>> searchProducts(@RequestParam String keyword) {
-        List<ProductResponseDTO> products = sellProductService.searchProducts(keyword);
 
-        return ApiResponse.success(products);
-    }
 
 
     // 상태가 SELL인 전체 판매 물품 최신순으로 조회
