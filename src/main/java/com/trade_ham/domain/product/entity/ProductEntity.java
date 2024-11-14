@@ -15,6 +15,7 @@ public class ProductEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long productId;
+
     @ManyToOne
     @JoinColumn(name = "seller_id")
     private UserEntity seller;
