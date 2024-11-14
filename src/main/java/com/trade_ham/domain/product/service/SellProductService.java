@@ -11,6 +11,7 @@ import com.trade_ham.global.common.exception.ErrorCode;
 import com.trade_ham.global.common.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -91,10 +92,13 @@ public class SellProductService {
     }
 
     // 상태가 SELL인 전체 판매 물품 최신순 조회
-    // N+1 문제 발생 예상 지역
+    @Transactional
     public ProductResponseDTO findSellProduct(Long productId) {
         ProductEntity productEntity = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
+
+        productEntity.setViews(productEntity.getViews() + 1);
+        productRepository.save(productEntity); // 변경 사항 저장
 
         return new ProductResponseDTO(productEntity);
     }

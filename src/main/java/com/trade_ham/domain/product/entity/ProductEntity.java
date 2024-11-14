@@ -37,6 +37,14 @@ public class ProductEntity extends BaseEntity {
     private Long price;
 
     @Setter
+    @Column(nullable = false)
+    private Long views = 0L; // 조회수
+
+    @Column(nullable = false)
+    private Long Likes = 0L; // 좋아요
+
+
+    @Setter
     @OneToOne
     @JoinColumn(name = "locker_id")
     private LockerEntity lockerEntity;
