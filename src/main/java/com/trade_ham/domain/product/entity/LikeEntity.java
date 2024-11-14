@@ -9,8 +9,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Table(uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"userId", "postId"})
-}) // 유저1은 게시물당 좋아요 행이 1개씩만 생성된다.(따라서 유일하다)
+        @UniqueConstraint(columnNames = {"userId", "productId"})
+}) // 유저는 물품당 좋아요 행이 1개씩만 생성된다.(따라서 유일하다)
 public class LikeEntity {
 
     @Id
@@ -22,6 +22,6 @@ public class LikeEntity {
     private UserEntity user;
 
     @ManyToOne // // 여러 개의 LikeEntity 하나의 PostEntity
-    @JoinColumn(name = "postId")
+    @JoinColumn(name = "productId")
     private ProductEntity product;
 }

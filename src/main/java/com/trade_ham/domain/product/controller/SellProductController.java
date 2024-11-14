@@ -59,6 +59,14 @@ public class SellProductController {
         return ApiResponse.success(products);
     }
 
+    @PostMapping("/{productId}/like")
+    public ApiResponse<String> likeProduct(@AuthenticationPrincipal CustomOAuth2User oAuth2User, @PathVariable Long productId) {
+        Long userId = oAuth2User.getId();
+        sellProductService.likeProduct(userId, productId);
+
+        return ApiResponse.success("좋아요 완료");
+    }
+
     // 상태가 SELL인 전체 판매 물품 최신순으로 조회
     @GetMapping("/all")
     public ApiResponse<List<ProductResponseDTO>> findAllSellProducts() {
@@ -66,6 +74,9 @@ public class SellProductController {
 
         return ApiResponse.success(products);
     }
+
+
+
 
 
 }
