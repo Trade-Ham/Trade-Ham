@@ -89,4 +89,15 @@ public class SellProductService {
                 .map(ProductResponseDTO::new)
                 .collect(Collectors.toList());
     }
+
+    // 상태가 SELL인 전체 판매 물품 최신순 조회
+    // N+1 문제 발생 예상 지역
+    public ProductResponseDTO findSellProduct(Long productId) {
+        ProductEntity productEntity = productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
+
+        return new ProductResponseDTO(productEntity);
+    }
+
+
 }
