@@ -41,6 +41,10 @@ public class ProductEntity extends BaseEntity {
     private int likeCount;
 
     @Setter
+    @Column(nullable = false)
+    private int viewCount;
+
+    @Setter
     @OneToOne
     @JoinColumn(name = "locker_id")
     private LockerEntity lockerEntity;

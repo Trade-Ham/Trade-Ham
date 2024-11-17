@@ -25,7 +25,7 @@ public class LikeSyncService {
                 Integer likeCount = redisTemplate.opsForValue().get(key);
                 if (likeCount != null) {
                     Long productId = extractProductIdFromKey(key);
-                    productRepository.findById(productId).ifPresent(product -> {
+                    productRepository.findByProductId(productId).ifPresent(product -> {
                         product.setLikeCount(likeCount); // DB에 동기화
                         productRepository.save(product);
                     });
