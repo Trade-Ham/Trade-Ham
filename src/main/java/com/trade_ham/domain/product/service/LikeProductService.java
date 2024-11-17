@@ -10,6 +10,7 @@ import com.trade_ham.global.common.exception.ErrorCode;
 import com.trade_ham.global.common.exception.InvalidProductStateException;
 import com.trade_ham.global.common.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,33 +23,31 @@ public class LikeProductService {
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
     private final LikeRepository likeRepository;
+    private final RedisTemplate<String, Integer> redisTemplate;
 
+    private static final String REDIS_KEY_PREFIX = "product:likes:";
 
     /**
      * 좋아요 추가
      */
     @Transactional
     public void likeProduct(Long productId, Long userId) {
-        // 유저 및 상품 조회
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND));
 
-        ProductEntity product = productRepository.findByIdWithPessimisticLock(productId)
+        ProductEntity product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
 
-        // 이미 좋아요를 눌렀는지 확인
         Optional<LikeEntity> existingLike = likeRepository.findByUserAndProduct(user, product);
         if (existingLike.isPresent()) {
             throw new InvalidProductStateException(ErrorCode.DUPLICATE_LIKE);
         }
 
-        // 좋아요 저장
         LikeEntity like = LikeEntity.of(user, product);
         likeRepository.save(like);
 
-        // 상품의 좋아요 수 감소
-        product.incrementLikeCount();
-        productRepository.save(product);
+        // 좋아요 수 Redis에 저장 (증가)
+        incrementLikeCount(productId);
     }
 
     /**
@@ -56,30 +55,51 @@ public class LikeProductService {
      */
     @Transactional
     public void unlikeProduct(Long productId, Long userId) {
-        // 유저 및 상품 조회
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND));
 
-        ProductEntity product = productRepository.findByIdWithPessimisticLock(productId)
+        ProductEntity product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
 
-        // 좋아요 삭제
         LikeEntity like = likeRepository.findByUserAndProduct(user, product)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.Like_NOT_FOUND));
         likeRepository.delete(like);
 
-        // 상품의 좋아요 수 감소
-        product.decrementLikeCount();
-        productRepository.save(product);
+        // 좋아요 수 Redis에서 감소
+        decrementLikeCount(productId);
     }
 
     /**
-     * 상품의 좋아요 개수 조회
+     * Redis에서 좋아요 수 증가
      */
-    @Transactional(readOnly = true)
+    private void incrementLikeCount(Long productId) {
+        String redisKey = REDIS_KEY_PREFIX + productId;
+        redisTemplate.opsForValue().increment(redisKey);
+    }
+
+    /**
+     * Redis에서 좋아요 수 감소
+     */
+    private void decrementLikeCount(Long productId) {
+        String redisKey = REDIS_KEY_PREFIX + productId;
+        redisTemplate.opsForValue().decrement(redisKey);
+    }
+
+    /**
+     * 좋아요 수 조회
+     */
     public int getLikeCount(Long productId) {
-        ProductEntity product = productRepository.findByProductId(productId)
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
-        return product.getLikeCount();
+        String redisKey = REDIS_KEY_PREFIX + productId;
+        Integer likeCount = redisTemplate.opsForValue().get(redisKey);
+
+        // Redis에 데이터가 없으면 DB에서 조회
+        if (likeCount == null) {
+            ProductEntity product = productRepository.findById(productId)
+                    .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
+            likeCount = product.getLikeCount();
+            redisTemplate.opsForValue().set(redisKey, likeCount); // Redis에 캐싱
+        }
+
+        return likeCount;
     }
 }

@@ -36,6 +36,7 @@ public class ProductEntity extends BaseEntity {
     @Column(nullable = false)
     private Long price;
 
+    @Setter
     @Column(nullable = false)
     private int likeCount;
 
@@ -51,13 +52,13 @@ public class ProductEntity extends BaseEntity {
         this.price = price;
     }
 
-    public void incrementLikeCount() {
-        this.likeCount++;
-    }
-
-    public void decrementLikeCount() {
-        if (this.likeCount > 0) {
-            this.likeCount--;
-        }
-    }
+//    public void incrementLikeCount() {
+//        this.likeCount++;
+//    }
+//
+//    public void decrementLikeCount() {
+//        if (this.likeCount > 0) {
+//            this.likeCount--;
+//        }
+//    }
 }
