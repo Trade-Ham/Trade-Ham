@@ -8,6 +8,10 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
+@Table(
+        name = "likes",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "product_id"})
+)
 public class LikeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
