@@ -33,7 +33,7 @@ public class LikeProductService {
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND));
 
-        ProductEntity product = productRepository.findByProductId(productId)
+        ProductEntity product = productRepository.findByIdWithPessimisticLock(productId)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
 
         // 이미 좋아요를 눌렀는지 확인
@@ -60,7 +60,7 @@ public class LikeProductService {
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND));
 
-        ProductEntity product = productRepository.findByProductId(productId)
+        ProductEntity product = productRepository.findByIdWithPessimisticLock(productId)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
 
         // 좋아요 삭제

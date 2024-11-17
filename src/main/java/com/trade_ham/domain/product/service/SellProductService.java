@@ -6,11 +6,13 @@ import com.trade_ham.domain.product.entity.ProductEntity;
 import com.trade_ham.domain.product.entity.ProductStatus;
 import com.trade_ham.domain.product.dto.ProductDTO;
 import com.trade_ham.domain.product.dto.ProductResponseDTO;
+import com.trade_ham.domain.product.repository.LikeRepository;
 import com.trade_ham.domain.product.repository.ProductRepository;
 import com.trade_ham.global.common.exception.ErrorCode;
 import com.trade_ham.global.common.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,6 +22,7 @@ import java.util.stream.Collectors;
 public class SellProductService {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
+    private final LikeRepository likeRepository;
 
     // 물품 올리기
     public ProductResponseDTO createProduct(ProductDTO productDTO, Long sellerId) {
@@ -55,6 +58,7 @@ public class SellProductService {
     }
 
     // 물품 삭제
+    @Transactional
     public void deleteProduct(Long productId) {
         ProductEntity productEntity = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
@@ -64,7 +68,7 @@ public class SellProductService {
         if (seller != null) {
             seller.deleteSellingProduct(productEntity);
         }
-
+        likeRepository.deleteByProduct(productEntity);
         productRepository.delete(productEntity);
     }
 
