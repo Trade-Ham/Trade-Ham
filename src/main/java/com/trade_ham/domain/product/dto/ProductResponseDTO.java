@@ -21,4 +21,5 @@ public class ProductResponseDTO {
         this.price = productEntity.getPrice();
         this.status = productEntity.getStatus();
     }
+
 }

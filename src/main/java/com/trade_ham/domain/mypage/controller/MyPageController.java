@@ -38,4 +38,13 @@ public class MyPageController {
 
         return ApiResponse.success(productEntities);
     }
+
+    // 내가 좋아요한 상품 조회
+    @GetMapping("likes")
+    public ApiResponse<List<ProductResponseDTO>> findLikedProducts(@AuthenticationPrincipal CustomOAuth2User oAuth2User) {
+        Long userId = oAuth2User.getId();
+        List<ProductResponseDTO> likedProducts = myPageService.findLikedProducts(userId);
+
+        return ApiResponse.success(likedProducts);
+    }
 }

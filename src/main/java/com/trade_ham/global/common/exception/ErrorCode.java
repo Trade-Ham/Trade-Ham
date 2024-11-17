@@ -20,9 +20,11 @@ public enum ErrorCode {
     PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "PRODUCT_NOT_FOUND", "상품을 찾을 수 없습니다."),
     LOCKER_NOT_AVAILABLE(HttpStatus.NOT_FOUND, "LOCKER_NOT_AVAILABLE", "사용 가능한 사물함이 없습니다."),
     TRADE_NOT_FOUND(HttpStatus.NOT_FOUND, "TRADE_NOT_FOUND", "해당하는 거래 내역이 없습니다."),
+    Like_NOT_FOUND(HttpStatus.NOT_FOUND, "Like_NOT_FOUND", "좋아요를 누른 상품이 아닙니다."),
 
     // 409 Conflict
     INVALID_PRODUCT_STATE(HttpStatus.CONFLICT, "INVALID_PRODUCT_STATE", "상품 상태가 올바르지 않습니다."),
+    DUPLICATE_LIKE(HttpStatus.CONFLICT, "DUPLICATE_LIKE", "이미 좋아요를 누른 상품입니다."),
 
     // 500 Internal Server Error
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_SERVER_ERROR", "서버 에러가 발생했습니다.");

@@ -36,6 +36,9 @@ public class ProductEntity extends BaseEntity {
     @Column(nullable = false)
     private Long price;
 
+    @Column(nullable = false)
+    private int likeCount;
+
     @Setter
     @OneToOne
     @JoinColumn(name = "locker_id")
@@ -48,4 +51,13 @@ public class ProductEntity extends BaseEntity {
         this.price = price;
     }
 
+    public void incrementLikeCount() {
+        this.likeCount++;
+    }
+
+    public void decrementLikeCount() {
+        if (this.likeCount > 0) {
+            this.likeCount--;
+        }
+    }
 }
