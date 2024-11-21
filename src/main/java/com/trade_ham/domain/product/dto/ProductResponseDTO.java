@@ -15,7 +15,7 @@ public class ProductResponseDTO {
     private ProductStatus status;
 
     public ProductResponseDTO(ProductEntity productEntity) {
-        this.productId = productEntity.getProductId();
+        this.productId = productEntity.getId();
         this.name = productEntity.getName();
         this.description = productEntity.getDescription();
         this.price = productEntity.getPrice();

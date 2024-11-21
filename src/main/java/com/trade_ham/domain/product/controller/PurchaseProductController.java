@@ -1,11 +1,7 @@
 package com.trade_ham.domain.product.controller;
 
 import com.trade_ham.domain.auth.dto.CustomOAuth2User;
-import com.trade_ham.domain.product.entity.ProductEntity;
-import com.trade_ham.domain.product.entity.ProductStatus;
 import com.trade_ham.domain.product.service.PurchaseProductService;
-import com.trade_ham.global.common.exception.AccessDeniedException;
-import com.trade_ham.global.common.exception.ErrorCode;
 import com.trade_ham.global.common.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -21,12 +17,6 @@ public class PurchaseProductController {
     @GetMapping("/product/purchase-page/{productId}")
     public ApiResponse<String> accessPurchasePage(@PathVariable Long productId, @AuthenticationPrincipal CustomOAuth2User oAuth2User) {
         Long buyerId = oAuth2User.getId();
-        ProductEntity productEntity = productService.findProductById(productId);
-
-        // 상태가 SELL이 아니라면 예외 발생
-        if (!productEntity.getStatus().equals(ProductStatus.SELL)) {
-            throw new AccessDeniedException(ErrorCode.ACCESS_DENIED);
-        }
 
         productService.purchaseProduct(productId, buyerId);
 

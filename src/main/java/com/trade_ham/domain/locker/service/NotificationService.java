@@ -1,6 +1,5 @@
 package com.trade_ham.domain.locker.service;
 
-import com.trade_ham.domain.locker.dto.NotificationResponseDTO;
 import com.trade_ham.domain.locker.entity.NotificationEntity;
 import com.trade_ham.domain.locker.repository.NotificationRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,10 +16,10 @@ public class NotificationService {
 
     @Transactional
     public List<NotificationEntity> allNotification(Long userId) {
-        List<NotificationEntity> notifications = notificationRepository.findByUserIdAndIsReadTrue(userId);
+        List<NotificationEntity> notifications = notificationRepository.findByUser_IdAndIsReadFalse(userId);
 
         for(NotificationEntity notificationEntity : notifications) {
-            notificationEntity.setRead(false);
+            notificationEntity.setRead(true);
         }
 
         return notificationRepository.saveAll(notifications);

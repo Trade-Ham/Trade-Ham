@@ -52,7 +52,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
             UserDTO userDTO = new UserDTO();
 
-            userDTO.setId(userRepository.findByProviderAndEmail(oAuth2Response.getProvider(), oAuth2Response.getEmail()).getUser_id());
+            userDTO.setId(userRepository.findByProviderAndEmail(oAuth2Response.getProvider(), oAuth2Response.getEmail()).getId());
             userDTO.setEmail(oAuth2Response.getEmail());
             userDTO.setNickname(oAuth2Response.getNickName());
             userDTO.setRole(Role.USER);
@@ -62,7 +62,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         }
         else{ // 이미 존재한다면
             UserDTO userDTO = new UserDTO();
-            userDTO.setId(existData.getUser_id());
+            userDTO.setId(existData.getId());
             userDTO.setNickname(existData.getNickname());
             userDTO.setEmail(existData.getEmail());
             userDTO.setRole(existData.getRole());

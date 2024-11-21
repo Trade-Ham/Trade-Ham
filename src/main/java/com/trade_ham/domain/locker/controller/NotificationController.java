@@ -20,7 +20,7 @@ public class NotificationController {
     private final NotificationService notificationService;
 
     @GetMapping()
-    public ApiResponse<List<NotificationEntity>> allNotification(@AuthenticationPrincipal CustomOAuth2User oAuth2User) {
+    public ApiResponse<List<NotificationEntity>> getAllNotifications(@AuthenticationPrincipal CustomOAuth2User oAuth2User) {
         Long userId = oAuth2User.getId();
 
         List<NotificationEntity> notifications = notificationService.allNotification(userId);

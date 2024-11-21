@@ -5,6 +5,7 @@ import com.trade_ham.domain.locker.entity.LockerEntity;
 import com.trade_ham.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Getter
@@ -14,7 +15,8 @@ import lombok.*;
 public class ProductEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long productId;
+    @Column(name = "product_id")
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "seller_id")
@@ -36,6 +38,16 @@ public class ProductEntity extends BaseEntity {
 
     @Column(nullable = false)
     private Long price;
+
+    @ColumnDefault("0")
+    @Column(nullable = false)
+    private Integer view;
+
+
+    // Redis 좋아요 개수
+    @Setter
+    @ColumnDefault("0")
+    private Long likeCount;
 
     @Setter
     @OneToOne

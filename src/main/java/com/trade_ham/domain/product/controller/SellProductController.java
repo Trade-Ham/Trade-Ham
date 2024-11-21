@@ -3,6 +3,7 @@ package com.trade_ham.domain.product.controller;
 import com.trade_ham.domain.auth.dto.CustomOAuth2User;
 import com.trade_ham.domain.product.dto.ProductDTO;
 import com.trade_ham.domain.product.dto.ProductResponseDTO;
+import com.trade_ham.domain.product.entity.ProductEntity;
 import com.trade_ham.domain.product.service.SellProductService;
 import com.trade_ham.global.common.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -49,7 +50,6 @@ public class SellProductController {
 
         return ApiResponse.success(products);
     }
-
 
     // 상태가 SELL인 전체 판매 물품 최신순으로 조회
     @GetMapping("/all")

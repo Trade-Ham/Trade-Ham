@@ -56,7 +56,7 @@ public class PurchaseProductService {
         UserEntity buyer = userRepository.findById(buyerId)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND));
 
-        NotificationBuyerDTO notificationBuyerDTO = new NotificationBuyerDTO("판매자의 실명 및 계좌번호", seller.getAccount(), seller.getRealname(), true, buyer);
+        NotificationBuyerDTO notificationBuyerDTO = new NotificationBuyerDTO("판매자의 실명 및 계좌번호", false, buyer);
         NotificationEntity notificationBuyerEntity = new NotificationEntity(notificationBuyerDTO);
         notificationRepository.save(notificationBuyerEntity);
 
@@ -105,7 +105,7 @@ public class PurchaseProductService {
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND));
 
         TradeEntity tradeEntity = TradeEntity.builder()
-                .productEntity(productEntity)
+                .product(productEntity)
                 .buyer(buyer)
                 .seller(productEntity.getSeller())
                 .lockerEntity(availableLockerEntity)
@@ -135,7 +135,7 @@ public class PurchaseProductService {
      */
     @Transactional
     public void productInLocker(Long productId) {
-        TradeEntity tradeEntity = tradeRepository.findByProductEntityId(productId)
+        TradeEntity tradeEntity = tradeRepository.findByProduct_Id(productId)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
 
         LockerEntity lockerEntity = tradeEntity.getLockerEntity();
@@ -159,7 +159,7 @@ public class PurchaseProductService {
         productEntity.setStatus(ProductStatus.DONE);
         productRepository.save(productEntity);
 
-        TradeEntity tradeEntity = tradeRepository.findByProductEntityId(productId)
+        TradeEntity tradeEntity = tradeRepository.findByProduct_Id(productId)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
         LockerEntity lockerEntity = tradeEntity.getLockerEntity();
         lockerEntity.setLockerStatus(true);
