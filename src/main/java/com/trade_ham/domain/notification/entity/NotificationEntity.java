@@ -1,6 +1,7 @@
 package com.trade_ham.domain.notification.entity;
 
 import com.trade_ham.domain.auth.entity.UserEntity;
+import com.trade_ham.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class NotificationEntity {
+public class NotificationEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long notificationId;
@@ -38,7 +39,6 @@ public class NotificationEntity {
 
     @PrePersist
     public void prePersist() {
-        this.createdAt = LocalDateTime.now();
         this.isRead = false;
     }
 

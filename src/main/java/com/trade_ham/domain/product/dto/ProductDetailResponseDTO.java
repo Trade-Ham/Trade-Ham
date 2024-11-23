@@ -3,11 +3,9 @@ package com.trade_ham.domain.product.dto;
 import com.trade_ham.domain.product.entity.ProductEntity;
 import com.trade_ham.domain.product.entity.ProductStatus;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
-public class ProductResponseDTO {
+public class ProductDetailResponseDTO {
     private Long productId;
     private String name;
     private String description;
@@ -17,7 +15,7 @@ public class ProductResponseDTO {
     private Long like;
     private Boolean isLiked;
 
-    public ProductResponseDTO(ProductEntity productEntity) {
+    public ProductDetailResponseDTO(ProductEntity productEntity) {
         this.productId = productEntity.getProductId();
         this.name = productEntity.getName();
         this.description = productEntity.getDescription();
