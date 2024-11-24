@@ -1,13 +1,10 @@
 package com.trade_ham.domain.product.controller;
 
-import com.trade_ham.domain.product.dto.ProductResponseDTO;
 import com.trade_ham.domain.product.service.ViewLikeProductService;
 import com.trade_ham.global.common.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,12 +25,5 @@ public class ViewLikeProductController {
         viewLikeProductService.decrementLike(userId, productId);
 
         return ApiResponse.success("좋아요 취소 완료");
-    }
-
-    @GetMapping("/likes")
-    public ApiResponse<List<ProductResponseDTO>> getUserLikes(@AuthenticationPrincipal Long userId) {
-        List<ProductResponseDTO> productResponseDTOS = viewLikeProductService.findUserLikeProducts(userId);
-
-        return ApiResponse.success(productResponseDTOS);
     }
 }

@@ -2,6 +2,7 @@ package com.trade_ham.domain.notification.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.trade_ham.domain.auth.entity.UserEntity;
+import com.trade_ham.domain.auth.repository.UserRepository;
 import com.trade_ham.domain.notification.dto.NotificationResponseDTO;
 import com.trade_ham.domain.notification.entity.NotificationEntity;
 import com.trade_ham.domain.notification.entity.NotificationType;
@@ -21,6 +22,7 @@ import java.util.Map;
 public class NotificationService {
     private final NotificationRepository notificationRepository;
     private final ObjectMapper objectMapper;
+    private final UserRepository userRepository;
 
     @Transactional
     public void createLockerNotification(UserEntity seller, String lockerId, String password) {
@@ -56,18 +58,16 @@ public class NotificationService {
     @Transactional(readOnly = true)
     public List<NotificationResponseDTO> getUserNotifications(Long userId) {
         List<NotificationEntity> notifications = notificationRepository.findByUser_IdOrderByCreatedAtDesc(userId);
-        return notifications.stream()
+        List<NotificationResponseDTO> notificationResponseDTOS = notifications.stream()
                 .map(NotificationResponseDTO::from)
                 .toList();
-    }
 
-    @Transactional
-    public Long changeNotificationStatus(Long notificationId) {
-        NotificationEntity notification = notificationRepository.findById(notificationId)
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.RESOURCE_NOT_FOUND));
-        notification.markAsRead();
+        UserEntity user = userRepository.findById(userId)
+                        .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND));
 
-        return notification.getNotificationId();
+        notificationRepository.markAllAsReadByUser(user);
+
+        return notificationResponseDTOS;
     }
 }
 

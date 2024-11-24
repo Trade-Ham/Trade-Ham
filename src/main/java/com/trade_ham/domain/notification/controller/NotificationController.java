@@ -24,11 +24,4 @@ public class NotificationController {
         List<NotificationResponseDTO> notifications = notificationService.getUserNotifications(oAuth2User.getId());
         return ApiResponse.success(notifications);
     }
-
-    @PutMapping("/notification/{notificationId}/toggle")
-    public ApiResponse<Long> notificationToggle(@AuthenticationPrincipal CustomOAuth2User oAuth2User, @PathVariable Long notificationId){
-        notificationId = notificationService.changeNotificationStatus(notificationId);
-
-        return ApiResponse.success(notificationId);
-    }
 }

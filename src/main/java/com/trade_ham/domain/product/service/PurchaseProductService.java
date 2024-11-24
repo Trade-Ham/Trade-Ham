@@ -34,17 +34,20 @@ public class PurchaseProductService {
      */
     @Transactional
     public ProductEntity purchaseProduct(Long productId) {
-        // 동시성을 고려해 비관적 락을 사용
-        ProductEntity productEntity = productRepository.findByIdWithPessimisticLock(productId)
+        ProductEntity productEntity = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
 
+        // 상태가 SELL이 아니라면 예외 발생
         if (!productEntity.getStatus().equals(ProductStatus.SELL)) {
             throw new AccessDeniedException(ErrorCode.ACCESS_DENIED);
         }
 
+        productEntity = productRepository.findByIdWithPessimisticLock(productId)
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
+
+
         // ProductEntity 상태를 'CHECK'로 변경
         productEntity.setStatus(ProductStatus.CHECK);
-        productRepository.save(productEntity);
 
         return productEntity;
     }
