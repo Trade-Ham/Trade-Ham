@@ -69,14 +69,5 @@ public class NotificationService {
 
         return notificationResponseDTOS;
     }
-
-    @Transactional
-    public Long changeNotificationStatus(Long notificationId) {
-        NotificationEntity notification = notificationRepository.findById(notificationId)
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.RESOURCE_NOT_FOUND));
-        notification.markAsRead();
-
-        return notification.getNotificationId();
-    }
 }
 
