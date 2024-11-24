@@ -18,12 +18,6 @@ public class PurchaseProductController {
 
     @GetMapping("/purchase-page/{productId}")
     public ApiResponse<String> accessPurchasePage(@PathVariable Long productId) {
-        ProductEntity productEntity = productService.findProductById(productId);
-
-        // 상태가 SELL이 아니라면 예외 발생
-        if (!productEntity.getStatus().equals(ProductStatus.SELL)) {
-            throw new AccessDeniedException(ErrorCode.ACCESS_DENIED);
-        }
 
         productService.purchaseProduct(productId);
 
