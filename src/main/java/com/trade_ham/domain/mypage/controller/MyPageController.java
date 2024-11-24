@@ -20,13 +20,11 @@ public class MyPageController {
 
     private final MyPageService myPageService;
 
-
     // 판매자의 판매 내역 조회
     @GetMapping("/sell")
     public ApiResponse<List<ProductResponseDTO>> findProductsBySeller(@AuthenticationPrincipal CustomOAuth2User oAuth2User) {
         Long sellerId = oAuth2User.getId();
         List<ProductResponseDTO> products = myPageService.findProductsBySeller(sellerId);
-
         return ApiResponse.success(products);
     }
 

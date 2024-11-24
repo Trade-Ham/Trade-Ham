@@ -45,6 +45,14 @@ public class SellProductController {
 
 
 
+    // 물품 1개 디테일 조회
+    @GetMapping("/{productId}")
+    public ApiResponse<ProductResponseDTO> findSellProduct(@PathVariable Long productId) {
+        ProductResponseDTO products = sellProductService.findSellProduct(productId);
+
+        return ApiResponse.success(products);
+    }
+
     // 상태가 SELL인 전체 판매 물품 최신순으로 조회
     @GetMapping("/all")
     public ApiResponse<List<ProductResponseDTO>> findAllSellProducts() {
@@ -52,4 +60,6 @@ public class SellProductController {
 
         return ApiResponse.success(products);
     }
+
+
 }
