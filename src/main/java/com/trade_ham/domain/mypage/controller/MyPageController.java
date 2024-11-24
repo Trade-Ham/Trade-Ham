@@ -4,6 +4,7 @@ import com.trade_ham.domain.auth.dto.CustomOAuth2User;
 import com.trade_ham.domain.mypage.service.MyPageService;
 import com.trade_ham.domain.product.entity.ProductEntity;
 import com.trade_ham.domain.product.dto.ProductResponseDTO;
+import com.trade_ham.domain.product.service.ViewLikeProductService;
 import com.trade_ham.global.common.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,6 +20,7 @@ import java.util.List;
 public class MyPageController {
 
     private final MyPageService myPageService;
+    private final ViewLikeProductService viewLikeProductService;
 
 
     // 판매자의 판매 내역 조회
@@ -37,5 +39,12 @@ public class MyPageController {
         List<ProductEntity> productEntities = myPageService.findProductsByBuyer(buyerId);
 
         return ApiResponse.success(productEntities);
+    }
+
+    @GetMapping("/likes")
+    public ApiResponse<List<ProductResponseDTO>> getUserLikes(@AuthenticationPrincipal Long userId) {
+        List<ProductResponseDTO> productResponseDTOS = viewLikeProductService.findUserLikeProducts(userId);
+
+        return ApiResponse.success(productResponseDTOS);
     }
 }
