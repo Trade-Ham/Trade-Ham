@@ -24,7 +24,6 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
     Optional<ProductEntity> findByIdWithPessimisticLock(@Param("productId") Long productId);
 
     @Query("SELECT p FROM ProductEntity p " +
-            "LEFT JOIN FETCH p.seller " +
             "WHERE (LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
             "OR LOWER(p.description) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
             "AND p.status = 'SELL' " +
