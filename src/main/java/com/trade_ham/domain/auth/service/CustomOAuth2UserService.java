@@ -61,6 +61,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         }
         else{ // 이미 존재한다면
             UserDTO userDTO = new UserDTO();
+
             userDTO.setId(existData.getId());
             userDTO.setNickname(existData.getNickname());
             userDTO.setEmail(existData.getEmail());

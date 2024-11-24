@@ -42,7 +42,7 @@ public class SellProductController {
 
         return ApiResponse.success("삭제 완료");
     }
-
+  
     // 상태가 SELL인 전체 판매 물품 최신순으로 조회
     // 필요한 데이터만 전달
     @GetMapping("/all")
@@ -60,6 +60,4 @@ public class SellProductController {
 
         return ApiResponse.success(product);
     }
-
-
 }
