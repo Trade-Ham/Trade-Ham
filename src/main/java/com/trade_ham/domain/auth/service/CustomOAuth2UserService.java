@@ -5,7 +5,6 @@ package com.trade_ham.domain.auth.service;
 import com.trade_ham.domain.auth.dto.*;
 import com.trade_ham.domain.auth.entity.UserEntity;
 import com.trade_ham.domain.auth.repository.UserRepository;
-import com.trade_ham.global.common.enums.Provider;
 import com.trade_ham.global.common.enums.Role;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -52,7 +51,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
             UserDTO userDTO = new UserDTO();
 
-            userDTO.setId(userRepository.findByProviderAndEmail(oAuth2Response.getProvider(), oAuth2Response.getEmail()).getUserId());
+            userDTO.setId(userRepository.findByProviderAndEmail(oAuth2Response.getProvider(), oAuth2Response.getEmail()).getId());
             userDTO.setEmail(oAuth2Response.getEmail());
             userDTO.setNickname(oAuth2Response.getNickName());
             userDTO.setRole(Role.USER);
@@ -62,7 +61,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         }
         else{ // 이미 존재한다면
             UserDTO userDTO = new UserDTO();
-            userDTO.setId(existData.getUserId());
+
+            userDTO.setId(existData.getId());
             userDTO.setNickname(existData.getNickname());
             userDTO.setEmail(existData.getEmail());
             userDTO.setRole(existData.getRole());

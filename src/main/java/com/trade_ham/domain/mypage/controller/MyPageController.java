@@ -21,7 +21,7 @@ public class MyPageController {
     private final MyPageService myPageService;
 
     // 판매자의 판매 내역 조회
-    @GetMapping("sell")
+    @GetMapping("/sell")
     public ApiResponse<List<ProductResponseDTO>> findProductsBySeller(@AuthenticationPrincipal CustomOAuth2User oAuth2User) {
         Long sellerId = oAuth2User.getId();
         List<ProductResponseDTO> products = myPageService.findProductsBySeller(sellerId);
@@ -29,7 +29,7 @@ public class MyPageController {
     }
 
     // 구매자의 구매 내역 조회
-    @GetMapping("purchase")
+    @GetMapping("/purchase")
     public ApiResponse<List<ProductEntity>> findProductsByBuyer(@AuthenticationPrincipal CustomOAuth2User oAuth2User) {
         Long buyerId = oAuth2User.getId();
         List<ProductEntity> productEntities = myPageService.findProductsByBuyer(buyerId);

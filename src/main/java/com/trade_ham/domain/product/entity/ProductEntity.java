@@ -5,6 +5,11 @@ import com.trade_ham.domain.locker.entity.LockerEntity;
 import com.trade_ham.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+
+import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Getter
@@ -40,6 +45,14 @@ public class ProductEntity extends BaseEntity {
     @OneToOne
     @JoinColumn(name = "locker_id")
     private LockerEntity lockerEntity;
+
+    @CreatedDate
+    @Column(nullable = false)
+    private LocalDateTime createdAt;
+
+    @LastModifiedDate
+    @Column(nullable = false)
+    private LocalDateTime updatedAt;
 
 
     public void updateProduct(String name, String description, Long price){

@@ -4,6 +4,7 @@ import com.trade_ham.domain.auth.entity.UserEntity;
 import com.trade_ham.domain.auth.repository.UserRepository;
 import com.trade_ham.domain.locker.entity.LockerEntity;
 import com.trade_ham.domain.locker.repository.LockerRepository;
+import com.trade_ham.domain.notification.service.NotificationService;
 import com.trade_ham.domain.product.entity.ProductEntity;
 import com.trade_ham.domain.product.entity.ProductStatus;
 import com.trade_ham.domain.product.entity.TradeEntity;
@@ -19,11 +20,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class    PurchaseProductService {
+public class PurchaseProductService {
     private final ProductRepository productRepository;
     private final LockerRepository lockerRepository;
     private final UserRepository userRepository;
     private final TradeRepository tradeRepository;
+    private final NotificationService notificationService;
 
     /*
     사용자가 구매 요청 버튼 클릭
@@ -88,6 +90,20 @@ public class    PurchaseProductService {
                 .build();
 
         buyer.addPurchasedProduct(productEntity);
+
+
+        // 판매자에게 알림 생성
+        notificationService.createLockerNotification(
+                productEntity.getSeller(),
+                availableLockerEntity.getLockerNumber(),
+                availableLockerEntity.getLockerPassword()
+        );
+
+        // 구매자에게 구매 완료 알림
+        notificationService.createPurchaseCompleteNotification(
+                buyer,
+                productEntity.getName()
+        );
 
         return tradeRepository.save(tradeEntity);
     }

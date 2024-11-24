@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/product")
 public class PurchaseProductController {
     private final PurchaseProductService productService;
 
-    @GetMapping("/product/purchase-page/{productId}")
+    @GetMapping("/purchase-page/{productId}")
     public ApiResponse<String> accessPurchasePage(@PathVariable Long productId) {
         ProductEntity productEntity = productService.findProductById(productId);
 
