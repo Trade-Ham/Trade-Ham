@@ -25,7 +25,7 @@ public class NotificationController {
         return ApiResponse.success(notifications);
     }
 
-    @PutMapping("/notification/{notoficationId}/toggle")
+    @PutMapping("/notification/{notificationId}/toggle")
     public ApiResponse<Long> notificationToggle(@AuthenticationPrincipal CustomOAuth2User oAuth2User, @PathVariable Long notificationId){
         notificationId = notificationService.changeNotificationStatus(notificationId);
 

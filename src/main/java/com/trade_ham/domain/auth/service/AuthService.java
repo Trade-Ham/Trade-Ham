@@ -37,7 +37,7 @@ public class AuthService {
 
         // 응답 설정
         response.setHeader("access", newAccess);
-        System.out.println(newAccess);
+
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

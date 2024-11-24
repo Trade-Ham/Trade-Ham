@@ -46,14 +46,11 @@ public class ProductEntity extends BaseEntity {
     @JoinColumn(name = "locker_id")
     private LockerEntity lockerEntity;
 
-    @CreatedDate
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
+    @Builder.Default
+    private Long views = 0L;
 
-    @LastModifiedDate
-    @Column(nullable = false)
-    private LocalDateTime updatedAt;
-
+    @Builder.Default
+    private Long likes = 0L;
 
     public void updateProduct(String name, String description, Long price){
         this.name = name;
@@ -61,4 +58,17 @@ public class ProductEntity extends BaseEntity {
         this.price = price;
     }
 
+    public void increaseLikes(){
+        this.likes++;
+    }
+
+    public void decreaseLikes(){
+        if(this.likes>0){
+            this.likes--;
+        }
+    }
+
+    public void increaseViews(){
+        this.views++;
+    }
 }
