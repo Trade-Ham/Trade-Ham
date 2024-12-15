@@ -56,6 +56,13 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
+bootJar {
+    archiveBaseName = 'tradeham-api'       
+    archiveVersion = '0.0.1'              
+    archiveClassifier = ''                 
+    archiveExtension = 'jar'        
+}
+
 tasks.named('test') {
     useJUnitPlatform()
 }
