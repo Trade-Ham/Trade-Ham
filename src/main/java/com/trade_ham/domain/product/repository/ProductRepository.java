@@ -31,4 +31,3 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
     List<ProductEntity> searchProducts(@Param("keyword") String keyword);
 
 }
-
