@@ -23,4 +23,5 @@ public class ProductEntityListener {
     public void onAfterDelete(ProductEntity product) {
         productSearchRepository.deleteById(product.getProductId());
     }
+    //
 }
