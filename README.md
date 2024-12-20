@@ -1,3 +1,8 @@
+![image](https://github.com/user-attachments/assets/0da846b8-8eff-46df-a948-2939b622da1c)
+
+
+
+
 ## 일정
 1주차: 로그인 및 로그아웃 → 6점
 
