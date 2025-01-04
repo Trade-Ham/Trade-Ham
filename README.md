@@ -1,6 +1,4 @@
-![image](https://github.com/user-attachments/assets/0da846b8-8eff-46df-a948-2939b622da1c)
-
-
+<img src="https://github.com/user-attachments/assets/11948c21-0db5-4359-9ada-23260ae36d72" alt="tradeham" width="300"/>
 
 
 ## 일정
